@@ -1,0 +1,23 @@
+{
+  "name": "simon",
+  "version": "1.0.0",
+  "description": "FreeCodeCamp Simon exercise",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/jw120/fcc-simon.git"
+  },
+  "main": "index.html",
+  "dependencies": {
+    "font-awesome": "^4.6.3"
+  },
+  "devDependencies": {
+    "tslint": "next",
+    "typescript": "next"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "lint": "tslint -c tslint.json src/*.ts"
+  },
+  "author": "JW",
+  "license": "MIT"
+}
