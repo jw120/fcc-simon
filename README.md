@@ -1,7 +1,7 @@
 
 
 
-From [Wikipeia](https://en.wikipedia.org/wiki/Simon_(game), Notes are
+From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are
 
 E-note (blue, lower right);  329.628  (was 659.255)
 C-sharp-note (yellow, lower left); 277.183 (was 554.365)
