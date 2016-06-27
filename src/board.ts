@@ -9,17 +9,20 @@ const outerBorderInsideRadius: number = outerBorderOutsideRadius - blackStripeWi
 const innerBorderInsideRadius: number = 30;
 const innerBorderOutsideRadius: number = innerBorderInsideRadius + blackStripeWidth;
 
+// Hold the scaling factor in a global so can share between drawing and callback handler
+let scale: number;
+
 /** Draw the Simon board on the canvas */
 export function renderBoard(canvas: HTMLCanvasElement): void {
 
   // We set the canvas to fill most of the available window
-  canvas.width = window.innerWidth;
+  canvas.width = window.innerWidth - 20;
   canvas.height = window.innerHeight - 100; // Allow space for footer
 
   // We transform the canvas so a square with coordinates (-100, -100) to (100, 100)
   // appears as the largest centred squate that will fit on the canvas
   const canvasMax: number = 100;
-  let scale: number = Math.min(canvas.width, canvas.height) / (2 * canvasMax);
+  scale = Math.min(canvas.width, canvas.height) / (2 * canvasMax);
   const context: CanvasRenderingContext2D = getContext2D(canvas);
   context.save();
   context.transform(scale, 0, 0, scale, canvas.width / 2, canvas.height / 2);
@@ -35,14 +38,12 @@ export function renderBoard(canvas: HTMLCanvasElement): void {
   centredFilledCircle(context, innerBorderOutsideRadius, "black");
   centredFilledCircle(context,  innerBorderInsideRadius, "grey");
 
-  canvas.addEventListener("click", handleCanvasClick(canvas, scale), false);
-
 }
 
 type canvasClickable = "RedButton" | "YellowButton" | "GreenButton" | "BlueButton";
 
 /** Helper function to generates a callback function to handle clicks on our canvas */
-function handleCanvasClick(canvas: HTMLCanvasElement, scale: number): ((e: MouseEvent) => void) {
+export function handleCanvasClick(canvas: HTMLCanvasElement): ((e: MouseEvent) => void) {
 
   return (event: MouseEvent) => {
 
@@ -53,6 +54,10 @@ function handleCanvasClick(canvas: HTMLCanvasElement, scale: number): ((e: Mouse
     // Coordinates on our -100..100 system
     let x: number = (pixelX - canvas.width / 2) / scale;
     let y: number = (pixelY - canvas.height / 2) / scale;
+
+    console.log("Window innerSize", window.innerWidth, window.innerHeight);
+    console.log("Canvas", canvas.width, canvas.height);
+    console.log("Click at", pixelX, pixelY, "or", x, y);
 
     console.log(findCanvasClickable(x, y));
   };
