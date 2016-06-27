@@ -28,6 +28,7 @@ If mode is giving
  - callbacks on on/off switch
  - callstrict on start buttons
  - play note and chain note callback on note ending
+ ( if interrupted - keep track of current note and stop() it after resetting its onended cb)
 
 If mode is taking
  - callback on note buttons

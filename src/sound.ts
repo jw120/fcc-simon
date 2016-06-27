@@ -1,3 +1,5 @@
+/** Test of producing sounds */
+
 import { Note } from "./game";
 
 let context: AudioContext;
