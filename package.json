@@ -8,15 +8,21 @@
   },
   "main": "index.html",
   "dependencies": {
-    "font-awesome": "^4.6.3"
+    "@types/debug": "0.0.22-alpha",
+    "debug": "^2.2.0"
   },
   "devDependencies": {
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2",
     "tslint": "next",
-    "typescript": "next"
+    "typescript": "next",
+    "webpack": "^1.13.1"
   },
   "scripts": {
     "compile": "tsc",
     "compile-watch": "tsc --watch",
+    "build": "webpack",
+    "build-watch": "webpack --watch",
     "lint": "tslint -c tslint.json src/*.ts"
   },
   "author": "JW",
