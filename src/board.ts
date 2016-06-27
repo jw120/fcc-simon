@@ -37,15 +37,49 @@ centredFilledRectangle(context, outerBorderOutsideRadius + outerBorderInsideRadi
 centredFilledCircle(context, innerBorderOutsideRadius, "black");
 centredFilledCircle(context,  innerBorderInsideRadius, "grey");
 
+canvas.addEventListener("click", handleCanvasClick, false);
 
+type canvasClickable = "RedButton" | "YellowButton" | "GreenButton" | "BlueButton";
 
-// function centredFilledArc(r: number, startAngle: number, endAngle: number, fillStyle: string): void {
-//   ctx.beginPath();
-//   ctx.arc(centreX, centreY, r, startAngle , endAngle);
-//   ctx.fillStyle = fillStyle;
-//   ctx.fill();
-// }
+function handleCanvasClick(event: MouseEvent): void {
 
+  // Pixel coordinates of click relative to canvas
+  let pixelX: number = event.pageX - canvas.offsetLeft;
+  let pixelY: number = event.pageY - canvas.offsetTop;
+
+  // Coordinates on our -100..100 system
+  let x: number = (pixelX - canvas.width / 2) / scale;
+  let y: number = (pixelY - canvas.height / 2) / scale;
+
+  console.log(findCanvasClickable(x, y));
+}
+
+function findCanvasClickable(x: number, y: number): canvasClickable | null {
+
+  // console.log("Looking up", x, y);
+
+  let r: number = Math.sqrt(x * x + y * y);
+
+  if (r > innerBorderOutsideRadius && r < outerBorderInsideRadius) {
+
+    if (Math.abs(x) > blackStripeWidth / 2 && Math.abs(y) > blackStripeWidth / 2) {
+
+      let theta: number = Math.atan2(y, x);
+      if (theta > Math.PI / 2 ) {
+        return "YellowButton"
+      } else if (theta > 0) {
+        return "BlueButton";
+      } else if (theta < - Math.PI / 2) {
+        return "GreenButton";
+      } else {
+        return "RedButton";
+      }
+    }
+  }
+
+  return null;
+
+}
 
 /** Helper functions to draw on canvas */
 
