@@ -3,12 +3,17 @@
 
 * Canvas
 
-  + Can we shift the origin?
+  + DONE Can we shift the origin?
   + Use light/dark versions
   + Callbacks
+  + DONE Match to window size
+  + Re-draw on window resize
 
 
+* Code
 
+ + Better enum type?
+ + Sort out packaging/webpack etc
 
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are
