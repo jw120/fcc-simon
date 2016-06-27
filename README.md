@@ -1,4 +1,14 @@
 
+## TODO
+
+* Canvas
+
+  + Can we shift the origin?
+  + Use light/dark versions
+  + Callbacks
+
+
+
 
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are

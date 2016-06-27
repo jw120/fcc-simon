@@ -16,6 +16,7 @@
   },
   "scripts": {
     "compile": "tsc",
+    "compile-watch": "tsc --watch",
     "lint": "tslint -c tslint.json src/*.ts"
   },
   "author": "JW",
