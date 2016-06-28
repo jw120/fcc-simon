@@ -17,3 +17,10 @@ export function run_when_document_ready(fn: () => void): void {
 export function assertNever(x: never): never {
     throw new Error("Unexpected object: " + x);
 }
+
+/** Distance between two points */
+export function dist(x1: number, y1: number, x2: number, y2: number): number {
+
+  return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+
+}

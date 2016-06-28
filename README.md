@@ -13,18 +13,20 @@ Callback madness
   + DONE Re-draw on window resize
   + DONE Add central buttons
   + TODO De-pixelate switch label text?
+  + TODO Rename drawNoteButton
 
 
 * Logic
 
-  + Extent click decoder to cope with all buttons
+  + DONE Extent click decoder to cope with all buttons
   + Handlers to make all buttons light up
-    - Notes on mouse down/up
-    - Swithches toggle on click
+    - Notes on mouse down/up (put a "depressed" field into State)
+    - DONE Swithches toggle on click
+    - Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
 
 * Code
 
- + Better enum type?
+ + TODO Document all modules - how to make module documentation not merge with first function?
  + DONE Sort out packaging/webpack etc
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are
