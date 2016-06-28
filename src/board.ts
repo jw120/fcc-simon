@@ -1,6 +1,6 @@
 /** Functions to draw the board */
 
-import { getContext2D, centredFilledRectangle, centredFilledCircle, centredFilledQuadrant } from "./canvas";
+import { centredFilledRectangle, centredFilledCircle, drawNoteButton } from "./canvas";
 
 // Sizes of the parts of the SImon board
 const blackStripeWidth: number = 10;
@@ -9,65 +9,66 @@ const outerBorderInsideRadius: number = outerBorderOutsideRadius - blackStripeWi
 const innerBorderInsideRadius: number = 30;
 const innerBorderOutsideRadius: number = innerBorderInsideRadius + blackStripeWidth;
 
-// Hold the scaling factor in a global so can share between drawing and callback handler
-let scale: number;
+// Alpha values to fill notes
+const normalNoteAlpha: number = 0.75;
+const brightNoteAlpha: number = 1;
 
 /** Draw the Simon board on the canvas */
-export function renderBoard(canvas: HTMLCanvasElement): void {
+export function drawBoard(context: CanvasRenderingContext2D): void {
 
-  // We set the canvas to fill most of the available window
-  canvas.width = window.innerWidth - 20;
-  canvas.height = window.innerHeight - 100; // Allow space for footer
-
-  // We transform the canvas so a square with coordinates (-100, -100) to (100, 100)
-  // appears as the largest centred squate that will fit on the canvas
-  const canvasMax: number = 100;
-  scale = Math.min(canvas.width, canvas.height) / (2 * canvasMax);
-  const context: CanvasRenderingContext2D = getContext2D(canvas);
-  context.save();
-  context.transform(scale, 0, 0, scale, canvas.width / 2, canvas.height / 2);
-
-  // Draw the Simon board
+  // Draw the borders
   centredFilledCircle(context, outerBorderOutsideRadius, "black");
-  centredFilledQuadrant(context, outerBorderInsideRadius, 0, "red");
-  centredFilledQuadrant(context, outerBorderInsideRadius, 1, "blue");
-  centredFilledQuadrant(context, outerBorderInsideRadius, 2, "yellow");
-  centredFilledQuadrant(context, outerBorderInsideRadius, 3, "green");
   centredFilledRectangle(context, blackStripeWidth, outerBorderOutsideRadius + outerBorderInsideRadius, "black");
   centredFilledRectangle(context, outerBorderOutsideRadius + outerBorderInsideRadius, blackStripeWidth, "black");
   centredFilledCircle(context, innerBorderOutsideRadius, "black");
   centredFilledCircle(context,  innerBorderInsideRadius, "grey");
 
+  // Draw the note buttons
+  drawNoteButton(context, 0, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "blue", normalNoteAlpha);
+  drawNoteButton(context, 1, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "yellow", normalNoteAlpha);
+  drawNoteButton(context, 2, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "green", normalNoteAlpha);
+  drawNoteButton(context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", normalNoteAlpha);
+
+
 }
 
 type canvasClickable = "RedButton" | "YellowButton" | "GreenButton" | "BlueButton";
 
+// Main.ts passes references to the globals we need to use and modify
+interface CanvasClickHandlerData {
+  canvas: HTMLCanvasElement;
+  context: CanvasRenderingContext2D;
+  scale: number;
+}
+
 /** Helper function to generates a callback function to handle clicks on our canvas */
-export function handleCanvasClick(canvas: HTMLCanvasElement): ((e: MouseEvent) => void) {
+export function makeCanvasClickHandler(dat: CanvasClickHandlerData): ((e: MouseEvent) => void) {
 
   return (event: MouseEvent) => {
 
     // Pixel coordinates of click relative to canvas
-    let pixelX: number = event.pageX - canvas.offsetLeft;
-    let pixelY: number = event.pageY - canvas.offsetTop;
+    let pixelX: number = event.pageX - dat.canvas.offsetLeft;
+    let pixelY: number = event.pageY - dat.canvas.offsetTop;
 
     // Coordinates on our -100..100 system
-    let x: number = (pixelX - canvas.width / 2) / scale;
-    let y: number = (pixelY - canvas.height / 2) / scale;
+    let x: number = (pixelX - dat.canvas.width / 2) / dat.scale;
+    let y: number = (pixelY - dat.canvas.height / 2) / dat.scale;
 
     console.log("Window innerSize", window.innerWidth, window.innerHeight);
-    console.log("Canvas", canvas.width, canvas.height);
+    console.log("Canvas", dat.canvas.width, dat.canvas.height);
     console.log("Click at", pixelX, pixelY, "or", x, y);
 
-    console.log(findCanvasClickable(x, y));
+    let clicked: canvasClickable | null = findCanvasClickable(x, y);
+    console.log(clicked);
+    if (clicked === "RedButton") {
+      drawNoteButton(dat.context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", brightNoteAlpha);
+    }
   };
 
 }
 
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
 function findCanvasClickable(x: number, y: number): canvasClickable | null {
-
-  // console.log("Looking up", x, y);
 
   let r: number = Math.sqrt(x * x + y * y);
 

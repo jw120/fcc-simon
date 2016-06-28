@@ -4,12 +4,13 @@
 * Canvas
 
   + DONE Can we shift the origin?
-  + Use light/dark versions
+  + DONE Use light/dark versions
   + DONE Pixel decode
   + DONE Callbacks
   + DONE Match to window size
   + DONE Re-draw on window resize
-
+  + Extent click handler to cope with all buttons
+  + Add central buttons
 
 * Code
 
