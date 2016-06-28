@@ -2,6 +2,10 @@
 import { getContext2D } from "./canvas";
 
 
+export type canvasButton =
+  "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" | "StartButton" | "StrictButton" | "PowerButton";
+
+
 /** Define the global state that will be shared between modules */
 export interface State {
 
@@ -9,6 +13,7 @@ export interface State {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   scale: number | undefined;
+  depressed: canvasButton | null;
 
   // Switches
   power: boolean;
@@ -25,8 +30,9 @@ export function initialState(): State {
     canvas,
     context: getContext2D(canvas),
     scale: undefined,
+    depressed: null,
     power: false,
-    strict: false,
+    strict: false
   };
 
 }

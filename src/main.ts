@@ -1,7 +1,7 @@
 /** Main programme */
 
 import { drawBoard } from "./board";
-import { makeCanvasClickHandler } from "./handler";
+import { makeCanvasClickHandler, makeCanvasMouseDownHandler, makeCanvasMouseUpHandler } from "./handler";
 import { initialState, State } from "./state";
 import { run_when_document_ready } from "./utils";
 
@@ -13,6 +13,8 @@ run_when_document_ready((): void => {
   drawBoard(state);
 
   state.canvas.addEventListener("click", makeCanvasClickHandler(state), false);
+  state.canvas.addEventListener("mousedown", makeCanvasMouseDownHandler(state), false);
+  state.canvas.addEventListener("mouseup", makeCanvasMouseUpHandler(state), false);
 
   window.onresize = () => {
     modifyScale(state);

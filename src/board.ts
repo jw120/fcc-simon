@@ -1,8 +1,7 @@
 /** Draw the board and decode clicks on the board */
 
 import { centredFilledRectangle, centredFilledCircle, outlinedFilledCircle, drawNoteButton, centredText } from "./canvas";
-import { State } from "./state";
-import { canvasButton } from "./handler";
+import { State, canvasButton } from "./state";
 import {
   blackStripeWidth, centralButtonRadius,
   outerBorderOutsideRadius, outerBorderInsideRadius,
@@ -51,19 +50,47 @@ export function drawButton(state: State, b: canvasButton): void {
   switch (b) {
 
     case "BlueButton":
-      drawNoteButton(state.context, 0, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "blue", normalNoteAlpha);
+      drawNoteButton(
+        state.context, 0,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "black", 1);
+      drawNoteButton(
+        state.context, 0,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "blue", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "YellowButton":
-      drawNoteButton(state.context, 1, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "yellow", normalNoteAlpha);
+      drawNoteButton(
+        state.context, 1,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "black", 1);
+      drawNoteButton(
+        state.context, 1,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "yellow", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "GreenButton":
-      drawNoteButton(state.context, 2, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "green", normalNoteAlpha);
+      drawNoteButton(
+        state.context, 2,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "black", 1);
+      drawNoteButton(
+        state.context, 2,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "green", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "RedButton":
-      drawNoteButton(state.context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", normalNoteAlpha);
+      drawNoteButton(
+        state.context, 3,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "black", 1);
+      drawNoteButton(
+        state.context, 3,
+        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
+        "red", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "PowerButton":

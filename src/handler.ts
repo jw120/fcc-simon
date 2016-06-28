@@ -1,14 +1,11 @@
 import { drawButton } from "./board";
-import { State } from "./state";
+import { State, canvasButton } from "./state";
 import { dist } from "./utils";
 import {
   blackStripeWidth, centralButtonRadius,
-  outerBorderOutsideRadius, outerBorderInsideRadius,
-  innerBorderOutsideRadius, innerBorderInsideRadius
+  outerBorderInsideRadius, innerBorderOutsideRadius, innerBorderInsideRadius
 } from "./boardDimensions";
 
-export type canvasButton =
-  "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" | "StartButton" | "StrictButton" | "PowerButton";
 
 
 /** Helper function to generates a callback function to handle clicks on our canvas */
@@ -16,20 +13,9 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
 
   return (event: MouseEvent) => {
 
-    // Pixel coordinates of click relative to canvas
-    let pixelX: number = event.pageX - state.canvas.offsetLeft;
-    let pixelY: number = event.pageY - state.canvas.offsetTop;
+    let clicked: canvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+    console.log("Clicked", clicked);
 
-    // Coordinates on our -100..100 system
-    let x: number = (pixelX - state.canvas.width / 2) / state.scale;
-    let y: number = (pixelY - state.canvas.height / 2) / state.scale;
-
-    console.log("Window innerSize", window.innerWidth, window.innerHeight);
-    console.log("Canvas", state.canvas.width, state.canvas.height);
-    console.log("Click at", pixelX, pixelY, "or", x, y);
-
-    let clicked: canvasButton | null = findCanvasButton(x, y);
-    console.log(clicked);
     switch (clicked) {
       case "PowerButton":
         state.power = !state.power;
@@ -40,7 +26,58 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
         drawButton(state, "StrictButton");
         break;
       default:
-        // do nothing
+        console.log("Ignoring");
+    }
+
+  };
+
+}
+
+/** Helper function to generates a callback function to handle mouse down events on our canvas */
+export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => void) {
+
+  return (event: MouseEvent) => {
+
+    let oldDepressed: canvasButton | null = state.depressed;
+
+    let down: canvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+    console.log("Down on", down);
+
+    if (down) {
+      switch (down) {
+        case "RedButton":
+        case "YellowButton":
+        case "BlueButton":
+        case "GreenButton":
+          state.depressed = down;
+          console.log("Drawing depressed", down);
+          drawButton(state, down);
+          break;
+        default:
+          // do nothing
+      }
+    }
+
+    if (oldDepressed && oldDepressed !== down) {
+      drawButton(state, oldDepressed);
+    }
+
+  };
+
+}
+
+/** Helper function to generates a callback function to handle mouse down events on our canvas */
+export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void) {
+
+  return (event: MouseEvent) => {
+
+    console.log("Up");
+
+    if (state.depressed) {
+      let oldDepressed: canvasButton = state.depressed;
+      console.log("Redrawing", oldDepressed);
+      state.depressed = null;
+      drawButton(state, oldDepressed);
     }
 
   };
@@ -49,7 +86,10 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
 
 
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
-function findCanvasButton(x: number, y: number): canvasButton | null {
+function findCanvasButton(coords: [number, number]): canvasButton | null {
+
+  let x: number = coords[0];
+  let y: number = coords[1];
 
   let r: number = Math.sqrt(x * x + y * y);
 
@@ -85,5 +125,25 @@ function findCanvasButton(x: number, y: number): canvasButton | null {
   }
 
   return null;
+
+}
+
+
+/** Helper function to return scaled coordinates */
+function scaledCoords(state: State, pageX: number, pageY: number): [number, number] {
+
+  // Pixel coordinates of click relative to canvas
+  let pixelX: number = pageX - state.canvas.offsetLeft;
+  let pixelY: number = pageY - state.canvas.offsetTop;
+
+  // Coordinates on our -100..100 system
+  let x: number = (pixelX - state.canvas.width / 2) / state.scale;
+  let y: number = (pixelY - state.canvas.height / 2) / state.scale;
+
+  // console.log("Window innerSize", window.innerWidth, window.innerHeight);
+  // console.log("Canvas", state.canvas.width, state.canvas.height);
+  // console.log("Click at", pixelX, pixelY, "or", x, y);
+
+  return [x, y];
 
 }

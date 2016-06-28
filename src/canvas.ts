@@ -127,12 +127,12 @@ export function drawNoteButton(
 }
 
 function moveToPolar(ctx: CanvasRenderingContext2D, r: number, theta: number): void {
-  console.log("Move to", r * Math.cos(theta), r * Math.sin(theta));
+  // console.log("Move to", r * Math.cos(theta), r * Math.sin(theta));
   ctx.moveTo(r * Math.cos(theta), r * Math.sin(theta));
 }
 
 function lineToPolar(ctx: CanvasRenderingContext2D, r: number, theta: number): void {
-  console.log("Line to", r * Math.cos(theta), r * Math.sin(theta));
+  // console.log("Line to", r * Math.cos(theta), r * Math.sin(theta));
   ctx.lineTo(r * Math.cos(theta), r * Math.sin(theta));
 }
 
