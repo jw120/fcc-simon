@@ -9,8 +9,11 @@
   + DONE Callbacks
   + DONE Match to window size
   + DONE Re-draw on window resize
-  + Extent click handler to cope with all buttons
-  + Add central buttons
+  + DONE Add central buttons
+  + Extent click decoder to cope with all buttons
+  + Handlers to make all buttons light up
+    - Notes on mouse down/up
+    - Swithches toggle on click
 
 * Code
 

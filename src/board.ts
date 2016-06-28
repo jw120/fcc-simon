@@ -1,6 +1,10 @@
-/** Functions to draw the board */
+/** Draw the board and decode clicks on the board */
 
-import { centredFilledRectangle, centredFilledCircle, drawNoteButton } from "./canvas";
+import { centredFilledRectangle, centredFilledCircle, outlinedFilledCircle, drawNoteButton, centredText } from "./canvas";
+
+type canvasButton =
+  "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" |
+  "StartButton" | "StrictButton" | "PowerButton";
 
 // Sizes of the parts of the SImon board
 const blackStripeWidth: number = 10;
@@ -9,9 +13,15 @@ const outerBorderInsideRadius: number = outerBorderOutsideRadius - blackStripeWi
 const innerBorderInsideRadius: number = 30;
 const innerBorderOutsideRadius: number = innerBorderInsideRadius + blackStripeWidth;
 
+const centralButtonRadius: number = 5;
+
 // Alpha values to fill notes
 const normalNoteAlpha: number = 0.75;
 const brightNoteAlpha: number = 1;
+
+// Alpha values for switches
+const offSwitchAlpha: number = 0.25;
+const onSwitchAlpha: number = 1;
 
 /** Draw the Simon board on the canvas */
 export function drawBoard(context: CanvasRenderingContext2D): void {
@@ -21,18 +31,69 @@ export function drawBoard(context: CanvasRenderingContext2D): void {
   centredFilledRectangle(context, blackStripeWidth, outerBorderOutsideRadius + outerBorderInsideRadius, "black");
   centredFilledRectangle(context, outerBorderOutsideRadius + outerBorderInsideRadius, blackStripeWidth, "black");
   centredFilledCircle(context, innerBorderOutsideRadius, "black");
-  centredFilledCircle(context,  innerBorderInsideRadius, "grey");
+  centredFilledCircle(context,  innerBorderInsideRadius, "silver");
+
+  // Draw control buttons
+  drawButton(context, "StartButton", 1.0);
+  drawButton(context, "StrictButton", 1.0);
+  drawButton(context, "PowerButton", 1.0);
 
   // Draw the note buttons
-  drawNoteButton(context, 0, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "blue", normalNoteAlpha);
-  drawNoteButton(context, 1, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "yellow", normalNoteAlpha);
-  drawNoteButton(context, 2, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "green", normalNoteAlpha);
-  drawNoteButton(context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", normalNoteAlpha);
+  drawButton(context, "BlueButton", normalNoteAlpha);
+  drawButton(context, "YellowButton", normalNoteAlpha);
+  drawButton(context, "GreenButton", normalNoteAlpha);
+  drawButton(context, "RedButton", normalNoteAlpha);
 
+  // Add the score
+  centredText(context, 0, - 0.3 * innerBorderInsideRadius, "0", "20px sans-serif");
 
 }
 
-type canvasClickable = "RedButton" | "YellowButton" | "GreenButton" | "BlueButton";
+// Helper function to draw a buttons
+function drawButton(context: CanvasRenderingContext2D, b: canvasButton, alpha: number): void {
+
+  switch (b) {
+
+    case "BlueButton":
+      drawNoteButton(context, 0, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "blue", alpha);
+      break;
+
+    case "YellowButton":
+      drawNoteButton(context, 1, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "yellow", alpha);
+      break;
+
+    case "GreenButton":
+      drawNoteButton(context, 2, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "green", alpha);
+      break;
+
+    case "RedButton":
+      drawNoteButton(context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", alpha);
+      break;
+
+    case "PowerButton":
+      outlinedFilledCircle(context, - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius, "green", offSwitchAlpha);
+      centredText(context,  - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.59, "POWER", "3px sans-serif");
+      break;
+
+    case "StartButton":
+      outlinedFilledCircle(context,   0   * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius, "red", offSwitchAlpha);
+      centredText(context,    0   * innerBorderInsideRadius, innerBorderInsideRadius * 0.59, "START", "3px sans-serif");
+      break;
+
+    case "StrictButton":
+      outlinedFilledCircle(context, + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius, "yellow", offSwitchAlpha);
+      centredText(context,  + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.59, "STRICT", "3px sans-serif");
+      break;
+
+    default:
+      throw Error("Unknown button type: " + b);
+
+  }
+
+}
+
+
+
 
 // Main.ts passes references to the globals we need to use and modify
 interface CanvasClickHandlerData {
@@ -58,7 +119,7 @@ export function makeCanvasClickHandler(dat: CanvasClickHandlerData): ((e: MouseE
     console.log("Canvas", dat.canvas.width, dat.canvas.height);
     console.log("Click at", pixelX, pixelY, "or", x, y);
 
-    let clicked: canvasClickable | null = findCanvasClickable(x, y);
+    let clicked: canvasButton | null = findCanvasButton(x, y);
     console.log(clicked);
     if (clicked === "RedButton") {
       drawNoteButton(dat.context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", brightNoteAlpha);
@@ -68,7 +129,7 @@ export function makeCanvasClickHandler(dat: CanvasClickHandlerData): ((e: MouseE
 }
 
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
-function findCanvasClickable(x: number, y: number): canvasClickable | null {
+function findCanvasButton(x: number, y: number): canvasButton | null {
 
   let r: number = Math.sqrt(x * x + y * y);
 

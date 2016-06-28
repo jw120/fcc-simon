@@ -10,7 +10,7 @@ export function getContext2D(cvs: HTMLCanvasElement): CanvasRenderingContext2D {
   }
 }
 
-/** Fill a rectangle of given width and height, centred on given centre */
+/** Fill a rectangle of given width and height */
 export function centredFilledRectangle(ctx: CanvasRenderingContext2D, w: number, h: number, fillStyle: string): void {
 
   ctx.save();
@@ -20,7 +20,7 @@ export function centredFilledRectangle(ctx: CanvasRenderingContext2D, w: number,
 
 }
 
-/** Fill a circle of given radius on given centre */
+/** Fill a circle of given radius e */
 export function centredFilledCircle(ctx: CanvasRenderingContext2D, r: number, fillStyle: string): void {
 
   ctx.save();
@@ -31,6 +31,35 @@ export function centredFilledCircle(ctx: CanvasRenderingContext2D, r: number, fi
   ctx.restore();
 
 }
+
+/** Fill a circle of given radius on given centre */
+export function outlinedFilledCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, fillStyle: string, alpha?: number): void {
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0 , 2 * Math.PI);
+  ctx.fillStyle = fillStyle;
+  ctx.stroke();
+  if (alpha) {
+    ctx.globalAlpha = alpha;
+  }
+  ctx.fill();
+  ctx.restore();
+
+}
+
+/** Draw given text centred on coordinate */
+export function centredText(ctx: CanvasRenderingContext2D, x: number, y: number, t: string, font: string): void {
+
+  ctx.save();
+  ctx.font = font;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(t, x, y);
+  ctx.restore();
+
+}
+
 
 /** Fill a quadrant of the circle between given radii radius. Quadrants numbered 0 to 3 clockwise from top-right */
 export function centredFilledQuadrant(ctx: CanvasRenderingContext2D, rOut: number, rIn: number, q: number, fillStyle: string, alpha?: number): void {
