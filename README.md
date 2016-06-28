@@ -1,4 +1,6 @@
 
+Callback madness
+
 ## TODO
 
 * Canvas
@@ -10,6 +12,11 @@
   + DONE Match to window size
   + DONE Re-draw on window resize
   + DONE Add central buttons
+  + TODO De-pixelate switch label text?
+
+
+* Logic
+
   + Extent click decoder to cope with all buttons
   + Handlers to make all buttons light up
     - Notes on mouse down/up

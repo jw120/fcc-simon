@@ -1,10 +1,11 @@
 /** Draw the board and decode clicks on the board */
 
 import { centredFilledRectangle, centredFilledCircle, outlinedFilledCircle, drawNoteButton, centredText } from "./canvas";
+import { State } from "./state";
+import { assertNever } from "./utils";
 
 type canvasButton =
-  "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" |
-  "StartButton" | "StrictButton" | "PowerButton";
+  "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" | "StartButton" | "StrictButton" | "PowerButton";
 
 // Sizes of the parts of the SImon board
 const blackStripeWidth: number = 10;
@@ -24,28 +25,28 @@ const offSwitchAlpha: number = 0.25;
 const onSwitchAlpha: number = 1;
 
 /** Draw the Simon board on the canvas */
-export function drawBoard(context: CanvasRenderingContext2D): void {
+export function drawBoard(state: State): void {
 
   // Draw the borders
-  centredFilledCircle(context, outerBorderOutsideRadius, "black");
-  centredFilledRectangle(context, blackStripeWidth, outerBorderOutsideRadius + outerBorderInsideRadius, "black");
-  centredFilledRectangle(context, outerBorderOutsideRadius + outerBorderInsideRadius, blackStripeWidth, "black");
-  centredFilledCircle(context, innerBorderOutsideRadius, "black");
-  centredFilledCircle(context,  innerBorderInsideRadius, "silver");
+  centredFilledCircle(state.context, outerBorderOutsideRadius, "black");
+  centredFilledRectangle(state.context, blackStripeWidth, outerBorderOutsideRadius + outerBorderInsideRadius, "black");
+  centredFilledRectangle(state.context, outerBorderOutsideRadius + outerBorderInsideRadius, blackStripeWidth, "black");
+  centredFilledCircle(state.context, innerBorderOutsideRadius, "black");
+  centredFilledCircle(state.context,  innerBorderInsideRadius, "silver");
 
   // Draw control buttons
-  drawButton(context, "StartButton", 1.0);
-  drawButton(context, "StrictButton", 1.0);
-  drawButton(context, "PowerButton", 1.0);
+  drawButton(state.context, "StartButton", 1.0);
+  drawButton(state.context, "StrictButton", 1.0);
+  drawButton(state.context, "PowerButton", 1.0);
 
   // Draw the note buttons
-  drawButton(context, "BlueButton", normalNoteAlpha);
-  drawButton(context, "YellowButton", normalNoteAlpha);
-  drawButton(context, "GreenButton", normalNoteAlpha);
-  drawButton(context, "RedButton", normalNoteAlpha);
+  drawButton(state.context, "BlueButton", normalNoteAlpha);
+  drawButton(state.context, "YellowButton", normalNoteAlpha);
+  drawButton(state.context, "GreenButton", normalNoteAlpha);
+  drawButton(state.context, "RedButton", normalNoteAlpha);
 
   // Add the score
-  centredText(context, 0, - 0.3 * innerBorderInsideRadius, "0", "20px sans-serif");
+  centredText(state.context, 0, - 0.3 * innerBorderInsideRadius, "0", "20px sans-serif");
 
 }
 
@@ -86,43 +87,34 @@ function drawButton(context: CanvasRenderingContext2D, b: canvasButton, alpha: n
       break;
 
     default:
-      throw Error("Unknown button type: " + b);
+      throw Error("Unknown button type in drawButton: " + b);
 
   }
 
 }
 
 
-
-
-// Main.ts passes references to the globals we need to use and modify
-interface CanvasClickHandlerData {
-  canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
-  scale: number;
-}
-
 /** Helper function to generates a callback function to handle clicks on our canvas */
-export function makeCanvasClickHandler(dat: CanvasClickHandlerData): ((e: MouseEvent) => void) {
+export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) {
 
   return (event: MouseEvent) => {
 
     // Pixel coordinates of click relative to canvas
-    let pixelX: number = event.pageX - dat.canvas.offsetLeft;
-    let pixelY: number = event.pageY - dat.canvas.offsetTop;
+    let pixelX: number = event.pageX - state.canvas.offsetLeft;
+    let pixelY: number = event.pageY - state.canvas.offsetTop;
 
     // Coordinates on our -100..100 system
-    let x: number = (pixelX - dat.canvas.width / 2) / dat.scale;
-    let y: number = (pixelY - dat.canvas.height / 2) / dat.scale;
+    let x: number = (pixelX - state.canvas.width / 2) / state.scale;
+    let y: number = (pixelY - state.canvas.height / 2) / state.scale;
 
     console.log("Window innerSize", window.innerWidth, window.innerHeight);
-    console.log("Canvas", dat.canvas.width, dat.canvas.height);
+    console.log("Canvas", state.canvas.width, state.canvas.height);
     console.log("Click at", pixelX, pixelY, "or", x, y);
 
     let clicked: canvasButton | null = findCanvasButton(x, y);
     console.log(clicked);
     if (clicked === "RedButton") {
-      drawNoteButton(dat.context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", brightNoteAlpha);
+      drawNoteButton(state.context, 3, innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2, "red", brightNoteAlpha);
     }
   };
 
