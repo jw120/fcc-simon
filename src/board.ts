@@ -3,7 +3,7 @@
  *
  */
 
-import { State, canvasButton } from "./state";
+import { State, CanvasButton } from "./state";
 import {
   fillCentredRectangle, fillCentredCircle, fillCentredCircleCleanAlpha,
   fillNoteButtonShapeCleanAlpha, centredText
@@ -61,7 +61,7 @@ export function drawBoard(state: State): void {
 }
 
 /** Redraw a button based on its current state */
-export function redrawButton(state: State, b: canvasButton): void {
+export function redrawButton(state: State, b: CanvasButton): void {
 
   switch (b) {
 

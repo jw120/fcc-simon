@@ -1,5 +1,6 @@
 import { redrawButton } from "./board";
-import { State, canvasButton } from "./state";
+import { startPlayingSound, stopPlayingSound } from "./sound";
+import { State, CanvasButton } from "./state";
 import { dist } from "./utils";
 import {
   blackStripeWidth, centralButtonRadius,
@@ -14,7 +15,7 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
 
   return (event: MouseEvent) => {
 
-    let clicked: canvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+    let clicked: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
 
     switch (clicked) {
       case "PowerButton":
@@ -40,9 +41,9 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
 
   return (event: MouseEvent) => {
 
-    let oldDepressed: canvasButton | null = state.depressed;
+    let oldDepressed: CanvasButton | null = state.depressed;
 
-    let down: canvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+    let down: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
 
     if (down) {
       switch (down) {
@@ -53,6 +54,7 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
           state.depressed = down;
           eventLog("Down", down, "redrew as depressed");
           redrawButton(state, down);
+          startPlayingSound(state.audio, down);
           break;
         default:
           eventLog("Down", down, "ignored");
@@ -75,13 +77,15 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
   return (event: MouseEvent) => {
 
     if (state.depressed) {
-      let oldDepressed: canvasButton = state.depressed;
+      let oldDepressed: CanvasButton = state.depressed;
       eventLog("Up", undefined, "triggered redraw of old depressed " + oldDepressed);
       state.depressed = null;
       redrawButton(state, oldDepressed);
     } else {
       eventLog("Up", undefined, "ignored");
     }
+    stopPlayingSound(state.audio);
+
 
   };
 
@@ -89,7 +93,7 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 
 
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
-function findCanvasButton(coords: [number, number]): canvasButton | null {
+function findCanvasButton(coords: [number, number]): CanvasButton | null {
 
   let x: number = coords[0];
   let y: number = coords[1];

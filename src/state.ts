@@ -1,8 +1,8 @@
-
+import { AudioState, newAudioState } from "./sound";
 import { getContext2D } from "./utils";
 
 
-export type canvasButton =
+export type CanvasButton =
   "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" | "StartButton" | "StrictButton" | "PowerButton";
 
 
@@ -13,7 +13,10 @@ export interface State {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   scale: number | undefined;
-  depressed: canvasButton | null;
+  depressed: CanvasButton | null;
+
+  // Sound
+  audio: AudioState;
 
   // Switches
   power: boolean;
@@ -30,6 +33,7 @@ export function initialState(): State {
     canvas,
     context: getContext2D(canvas),
     scale: undefined,
+    audio: newAudioState(),
     depressed: null,
     power: false,
     strict: false

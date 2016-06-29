@@ -18,6 +18,10 @@ Callback madness
   + TODO Use brighter green? (Put boardColors into separate file)
 
 
+* Sound
+
+  + TODO Does gain work?
+
 * Logic
 
   + DONE Extent click decoder to cope with all buttons
@@ -25,7 +29,8 @@ Callback madness
     - DONE Notes on mouse down/up (put a "depressed" field into State)
     - DONE Swithches toggle on click
     - DOME Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
-  + Add sounds
+  + DONE Add sounds
+  + TODO Add playback
 
 * Code
 
