@@ -1,5 +1,5 @@
 
-import { getContext2D } from "./canvas";
+import { getContext2D } from "./utils";
 
 
 export type canvasButton =

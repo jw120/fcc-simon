@@ -1,9 +1,15 @@
-/** Draw the board and decode clicks on the board */
+/*
+ * Draw the board
+ *
+ */
 
-import { centredFilledRectangle, centredFilledCircle, outlinedFilledCircle, drawNoteButton, centredText } from "./canvas";
 import { State, canvasButton } from "./state";
 import {
-  blackStripeWidth, centralButtonRadius,
+  fillCentredRectangle, fillCentredCircle, fillCentredCircleCleanAlpha,
+  fillNoteButtonShapeCleanAlpha, centredText
+} from "./canvas";
+import {
+  blackStripeWidth, centralButtonRadius, centralButtonRingRadius,
   outerBorderOutsideRadius, outerBorderInsideRadius,
   innerBorderOutsideRadius, innerBorderInsideRadius
 } from "./boardDimensions";
@@ -15,127 +21,97 @@ const normalNoteAlpha: number = 0.75;
 const brightNoteAlpha: number = 1;
 
 // Alpha values for switches
-const offSwitchAlpha: number = 0.25;
+const offSwitchAlpha: number = 0.5;
 const onSwitchAlpha: number = 1;
 
 /** Draw the Simon board on the canvas */
 export function drawBoard(state: State): void {
 
   // Draw the borders
-  centredFilledCircle(state.context, outerBorderOutsideRadius, "black");
-  centredFilledRectangle(state.context, blackStripeWidth, outerBorderOutsideRadius + outerBorderInsideRadius, "black");
-  centredFilledRectangle(state.context, outerBorderOutsideRadius + outerBorderInsideRadius, blackStripeWidth, "black");
-  centredFilledCircle(state.context, innerBorderOutsideRadius, "black");
-  centredFilledCircle(state.context,  innerBorderInsideRadius, centralBackgroundColour);
+  fillCentredCircle(state.context, 0, 0, outerBorderOutsideRadius, "black");
+  fillCentredRectangle(state.context, 0, 0, blackStripeWidth, outerBorderOutsideRadius + outerBorderInsideRadius, "black");
+  fillCentredRectangle(state.context, 0, 0, outerBorderOutsideRadius + outerBorderInsideRadius, blackStripeWidth, "black");
+  fillCentredCircle(state.context, 0, 0, innerBorderOutsideRadius, "black");
+  fillCentredCircle(state.context,  0, 0, innerBorderInsideRadius, centralBackgroundColour);
+
+  // Draw the labels for the control buttons
+  centredText(state.context, - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.6, "POWER", "3px sans-serif");
+  centredText(state.context,    0  * innerBorderInsideRadius, innerBorderInsideRadius * 0.6, "START", "3px sans-serif");
+  centredText(state.context, + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.6, "STRICT", "3px sans-serif");
+
+  // Draw the rings around the control buttons
+  fillCentredCircle(state.context, - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRingRadius, "black");
+  fillCentredCircle(state.context,   0   * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRingRadius, "black");
+  fillCentredCircle(state.context, + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRingRadius, "black");
 
   // Draw control buttons
-  drawButton(state, "StartButton");
-  drawButton(state, "PowerButton");
-  drawButton(state, "StrictButton");
+  redrawButton(state, "StartButton");
+  redrawButton(state, "PowerButton");
+  redrawButton(state, "StrictButton");
 
   // Draw the note buttons
-  drawButton(state, "BlueButton");
-  drawButton(state, "YellowButton");
-  drawButton(state, "GreenButton");
-  drawButton(state, "RedButton");
+  redrawButton(state, "BlueButton");
+  redrawButton(state, "YellowButton");
+  redrawButton(state, "GreenButton");
+  redrawButton(state, "RedButton");
 
   // Add the score
   centredText(state.context, 0, - 0.3 * innerBorderInsideRadius, "0", "20px sans-serif");
 
 }
 
-/** Helper function to (re)draw a button */
-export function drawButton(state: State, b: canvasButton): void {
+/** Redraw a button based on its current state */
+export function redrawButton(state: State, b: canvasButton): void {
 
   switch (b) {
 
     case "BlueButton":
-      drawNoteButton(
+    fillNoteButtonShapeCleanAlpha(
         state.context, 0,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", 1);
-      drawNoteButton(
-        state.context, 0,
-        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "blue", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "blue", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "YellowButton":
-      drawNoteButton(
+    fillNoteButtonShapeCleanAlpha(
         state.context, 1,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", 1);
-      drawNoteButton(
-        state.context, 1,
-        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "yellow", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "yellow", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "GreenButton":
-      drawNoteButton(
+    fillNoteButtonShapeCleanAlpha(
         state.context, 2,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", 1);
-      drawNoteButton(
-        state.context, 2,
-        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "green", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "green", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "RedButton":
-      drawNoteButton(
+    fillNoteButtonShapeCleanAlpha(
         state.context, 3,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", 1);
-      drawNoteButton(
-        state.context, 3,
-        innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "red", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "red", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "PowerButton":
-      outlinedFilledCircle(
+      fillCentredCircleCleanAlpha(
         state.context,
         - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        centralBackgroundColour, 1);
-      outlinedFilledCircle(
-        state.context,
-        - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        "green", state.power ? onSwitchAlpha : offSwitchAlpha);
-      centredText(
-        state.context,
-        - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.59,
-        "POWER", "3px sans-serif");
+        "black", "green", state.power ? onSwitchAlpha : offSwitchAlpha);
       break;
 
     case "StartButton":
-      outlinedFilledCircle(
+      fillCentredCircleCleanAlpha(
         state.context,
         0 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        centralBackgroundColour, 1);
-      outlinedFilledCircle(
-        state.context,
-        0 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        "red", offSwitchAlpha);
-      centredText(
-        state.context,
-        0 * innerBorderInsideRadius, innerBorderInsideRadius * 0.59,
-        "START", "3px sans-serif");
+        "black", "red", offSwitchAlpha);
       break;
 
     case "StrictButton":
-      outlinedFilledCircle(
-        state.context,
-        + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        centralBackgroundColour, 1);
-      outlinedFilledCircle(
+      fillCentredCircleCleanAlpha(
         state.context,
         + 0.5  * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        "yellow", state.strict ? onSwitchAlpha : offSwitchAlpha);
-      centredText(
-        state.context,
-        + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.59,
-        "STRICT", "3px sans-serif");
+        "black", "yellow", state.strict ? onSwitchAlpha : offSwitchAlpha);
       break;
 
     default:

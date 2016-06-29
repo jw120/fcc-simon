@@ -1,4 +1,4 @@
-import { drawButton } from "./board";
+import { redrawButton } from "./board";
 import { State, canvasButton } from "./state";
 import { dist } from "./utils";
 import {
@@ -6,7 +6,8 @@ import {
   outerBorderInsideRadius, innerBorderOutsideRadius, innerBorderInsideRadius
 } from "./boardDimensions";
 
-
+/** Should we log events to console.log */
+const eventLogging: boolean = true;
 
 /** Helper function to generates a callback function to handle clicks on our canvas */
 export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) {
@@ -14,19 +15,20 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
   return (event: MouseEvent) => {
 
     let clicked: canvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
-    console.log("Clicked", clicked);
 
     switch (clicked) {
       case "PowerButton":
+        eventLog("Click", clicked, "redrew");
         state.power = !state.power;
-        drawButton(state, "PowerButton");
+        redrawButton(state, "PowerButton");
         break;
       case "StrictButton":
+        eventLog("Click", clicked, "redrew");
         state.strict = !state.strict;
-        drawButton(state, "StrictButton");
+        redrawButton(state, "StrictButton");
         break;
       default:
-        console.log("Ignoring");
+        eventLog("Click", clicked, "ignored");
     }
 
   };
@@ -41,7 +43,6 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
     let oldDepressed: canvasButton | null = state.depressed;
 
     let down: canvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
-    console.log("Down on", down);
 
     if (down) {
       switch (down) {
@@ -50,16 +51,18 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
         case "BlueButton":
         case "GreenButton":
           state.depressed = down;
-          console.log("Drawing depressed", down);
-          drawButton(state, down);
+          eventLog("Down", down, "redrew as depressed");
+          redrawButton(state, down);
           break;
         default:
+          eventLog("Down", down, "ignored");
           // do nothing
       }
     }
 
     if (oldDepressed && oldDepressed !== down) {
-      drawButton(state, oldDepressed);
+      eventLog("Down", down, "redrew old depressed " + oldDepressed);
+      redrawButton(state, oldDepressed);
     }
 
   };
@@ -71,13 +74,13 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 
   return (event: MouseEvent) => {
 
-    console.log("Up");
-
     if (state.depressed) {
       let oldDepressed: canvasButton = state.depressed;
-      console.log("Redrawing", oldDepressed);
+      eventLog("Up", undefined, "triggered redraw of old depressed " + oldDepressed);
       state.depressed = null;
-      drawButton(state, oldDepressed);
+      redrawButton(state, oldDepressed);
+    } else {
+      eventLog("Up", undefined, "ignored");
     }
 
   };
@@ -145,5 +148,28 @@ function scaledCoords(state: State, pageX: number, pageY: number): [number, numb
   // console.log("Click at", pixelX, pixelY, "or", x, y);
 
   return [x, y];
+
+}
+
+/** Helper function to log click event and how we handle it to console */
+function eventLog(triggerName: string | undefined | null, target: string | undefined | null, action: string): void {
+
+  if (eventLogging) {
+    console.log(padTo(triggerName, 6), padTo(target, 12), ":", action);
+  }
+
+}
+
+/** Right-pad the string with spaces to reach the given length */
+function padTo(s: string | undefined | null, n: number): string {
+
+  if (s === null) {
+    s = "null";
+  } else if (s === undefined) {
+    s = "undefined";
+  }
+
+  let pad: number = n - s.length;
+  return pad > 0 ? s + "                ".substr(0, pad) : s;
 
 }

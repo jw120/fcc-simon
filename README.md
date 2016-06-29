@@ -12,17 +12,19 @@ Callback madness
   + DONE Match to window size
   + DONE Re-draw on window resize
   + DONE Add central buttons
+  + DONE Rename drawNoteButton, and DRY
+
   + TODO De-pixelate switch label text?
-  + TODO Rename drawNoteButton, and DRY
+  + TODO Use brighter green? (Put boardColors into separate file)
 
 
 * Logic
 
   + DONE Extent click decoder to cope with all buttons
-  + Handlers to make all buttons light up
+  + DONE Handlers to make all buttons light up
     - DONE Notes on mouse down/up (put a "depressed" field into State)
     - DONE Swithches toggle on click
-    - Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
+    - DOME Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
   + Add sounds
 
 * Code

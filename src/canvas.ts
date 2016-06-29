@@ -1,48 +1,54 @@
-/** Helper functions to draw on canvas */
+/*
+ * Functions to draw onto the canvas. Functions simply operate on the given
+ * canvas context (which they preserve) and have no game or state logic.
+ */
 
-/** Return the rendering context from the given canvas, throws on failure  */
-export function getContext2D(cvs: HTMLCanvasElement): CanvasRenderingContext2D {
-  let c: CanvasRenderingContext2D | null = cvs.getContext("2d");
-  if (c) {
-    return c;
-  } else {
-    throw Error("Cannot get canvas context");
-  }
-}
-
-/** Fill a rectangle of given width and height */
-export function centredFilledRectangle(ctx: CanvasRenderingContext2D, w: number, h: number, fillStyle: string): void {
+/** Fill a rectangle of given width and height that is centred on given coordinates */
+export function fillCentredRectangle(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, w: number, h: number,
+  fillStyle: string): void {
 
   ctx.save();
   ctx.fillStyle = fillStyle;
-  ctx.fillRect(- w / 2,  - h / 2, w, h);
+  ctx.fillRect(x - w / 2,  y - h / 2, w, h);
   ctx.restore();
 
 }
 
-/** Fill a circle of given radius e */
-export function centredFilledCircle(ctx: CanvasRenderingContext2D, r: number, fillStyle: string): void {
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0 , 2 * Math.PI);
-  ctx.fillStyle = fillStyle;
-  ctx.fill();
-  ctx.restore();
-
-}
-
-/** Fill a circle of given radius on given centre */
-export function outlinedFilledCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, fillStyle: string, alpha?: number): void {
+/** Fill a circle of given radius that is centered of given coordinates */
+export function fillCentredCircle(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, r: number,
+  fillStyle: string, alpha?: number): void {
 
   ctx.save();
   ctx.beginPath();
   ctx.arc(x, y, r, 0 , 2 * Math.PI);
   ctx.fillStyle = fillStyle;
-  ctx.stroke();
   if (alpha) {
     ctx.globalAlpha = alpha;
   }
+  ctx.fill();
+  ctx.restore();
+
+}
+
+/** Fill a circle of given radius that is centered of given coordinates first with
+ * background fill style (and 100% alpha) then with given fillstyle and alpha
+*/
+export function fillCentredCircleCleanAlpha(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, r: number,
+  bgFillStyle: string, fillStyle: string, alpha: number): void {
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0 , 2 * Math.PI);
+  ctx.fillStyle = bgFillStyle;
+  ctx.fill();
+  ctx.fillStyle = fillStyle;
+  ctx.globalAlpha = alpha;
   ctx.fill();
   ctx.restore();
 
@@ -61,44 +67,16 @@ export function centredText(ctx: CanvasRenderingContext2D, x: number, y: number,
 }
 
 
-/** Fill a quadrant of the circle between given radii radius. Quadrants numbered 0 to 3 clockwise from top-right */
-export function centredFilledQuadrant(ctx: CanvasRenderingContext2D, rOut: number, rIn: number, q: number, fillStyle: string, alpha?: number): void {
-
-  q = q % 4;
-  let vertDir: number = q === 1 || q === 2 ? 1 : -1;
-  let horizDir: number = q === 0 || q === 1 ? 1 : -1;
-
-  ctx.save();
-
-  ctx.beginPath();
-  ctx.moveTo(0,               rIn);
-  ctx.lineTo(0,               vertDir * rOut);
-  ctx.lineTo(horizDir * rOut, vertDir * rOut);
-  ctx.lineTo(horizDir * rOut, 0);
-  ctx.lineTo(rIn,             0);
-  ctx.arc(0, 0, 0, rIn, 2 * Math.PI);
-  ctx.clip();
-
-  ctx.beginPath();
-  if (alpha) {
-    ctx.globalAlpha = alpha;
-  }
-  ctx.arc(0, 0, rOut, 0, 2 * Math.PI);
-  ctx.fillStyle = fillStyle;
-  ctx.fill();
-
-  ctx.restore();
-
-}
-
-export function drawNoteButton(
+/** Fill the note button shape (a quadrant with missing borders along axis and the middle) centred on the origin
+ * twice: once with background fill style (and 100% alpha) and then with given fillstyle and alpha
+ */
+export function fillNoteButtonShapeCleanAlpha(
   ctx: CanvasRenderingContext2D,
   quadrant: number, // numbered clockwise 0..3 starting at bottom-right
   rIn: number, // Inside radius
   rOut: number, // Outside radius
   offset: number, // Perpendicular distance from vertices to nearest axis
-  fillStyle: string,
-  alpha: number
+  bgFillStyle: string, fillStyle: string, alpha: number
   ): void {
 
   /** Angle to axis of an inside vertex of the note button */
@@ -119,6 +97,8 @@ export function drawNoteButton(
   lineToPolar(ctx, rIn, Math.PI * 0.5 - thetaIn + thetaRotate);
   ctx.arc(0, 0, rIn, Math.PI * 0.5 - thetaIn + thetaRotate, thetaIn + thetaRotate, true);
 
+  ctx.fillStyle = bgFillStyle;
+  ctx.fill();
   ctx.globalAlpha = alpha;
   ctx.fillStyle = fillStyle;
   ctx.fill();

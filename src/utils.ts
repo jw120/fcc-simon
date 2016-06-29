@@ -24,3 +24,13 @@ export function dist(x1: number, y1: number, x2: number, y2: number): number {
   return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
 }
+
+/** Return the rendering context from the given canvas, throws on failure  */
+export function getContext2D(cvs: HTMLCanvasElement): CanvasRenderingContext2D {
+  let c: CanvasRenderingContext2D | null = cvs.getContext("2d");
+  if (c) {
+    return c;
+  } else {
+    throw Error("Cannot get canvas context");
+  }
+}
