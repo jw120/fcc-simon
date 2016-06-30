@@ -111,7 +111,7 @@ export function redrawButton(state: State, b: CanvasButton): void {
       fillCentredCircleCleanAlpha(
         state.context,
         + 0.5  * innerBorderInsideRadius, innerBorderInsideRadius * 0.3,  centralButtonRadius,
-        "black", "yellow", state.strict ? onSwitchAlpha : offSwitchAlpha);
+        "black", "yellow", state.strict && state.power ? onSwitchAlpha : offSwitchAlpha);
       break;
 
     default:

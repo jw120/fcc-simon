@@ -21,6 +21,9 @@ Callback madness
 * Sound
 
   + TODO Does gain work?
+  + TODO Add timeout? Is there an event for mousing off page?
+  + TODO Test whether Start -> 3 random notes works
+  + TODO Think about logic...
 
 * Logic
 

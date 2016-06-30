@@ -1,6 +1,7 @@
 
 
-import { CanvasButton } from "./state";
+import { Note } from "./state";
+
 
 export interface AudioState {
   context: AudioContext;
@@ -24,7 +25,8 @@ export function newAudioState(): AudioState {
 
 }
 
-export function startPlayingSound(audio: AudioState, b: CanvasButton): void {
+/** Start playing the given note, stopping after the optional duration and applying the optional callback */
+export function startPlayingSound(audio: AudioState, n: Note, dur?: number, cb?: (() => void)): void {
 
   let osc: OscillatorNode | undefined = audio.context.createOscillator();
   if (!osc) {
@@ -33,17 +35,17 @@ export function startPlayingSound(audio: AudioState, b: CanvasButton): void {
   osc.type = "square";
   osc.connect(audio.gainNode);
 
-  switch (b) {
-    case "BlueButton":
+  switch (n) {
+    case "BlueNote":
       osc.frequency.value = 329.628;
       break;
-    case "YellowButton":
+    case "YellowNote":
       osc.frequency.value = 277.183;
       break;
-    case "RedButton":
+    case "RedNote":
       osc.frequency.value = 440;
       break;
-    case "GreenButton":
+    case "GreenNote":
       osc.frequency.value = 164.814;
       break;
     default:
@@ -52,6 +54,13 @@ export function startPlayingSound(audio: AudioState, b: CanvasButton): void {
 
   osc.start();
   audio.playingSound = osc;
+  if (dur !== undefined) {
+    osc.stop(audio.context.currentTime + dur);
+  }
+
+  if (cb !== undefined) {
+    osc.onended = cb;
+  }
 
 }
 

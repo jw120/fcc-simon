@@ -5,6 +5,9 @@ import { getContext2D } from "./utils";
 export type CanvasButton =
   "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" | "StartButton" | "StrictButton" | "PowerButton";
 
+export type Note =
+  "BlueNote" | "GreenNote" | "YellowNote" | "RedNote";
+
 
 /** Define the global state that will be shared between modules */
 export interface State {
@@ -17,6 +20,7 @@ export interface State {
 
   // Sound
   audio: AudioState;
+  tune: Note[];
 
   // Switches
   power: boolean;
@@ -34,9 +38,28 @@ export function initialState(): State {
     context: getContext2D(canvas),
     scale: undefined,
     audio: newAudioState(),
+    tune: [],
     depressed: null,
     power: false,
     strict: false
   };
+
+}
+
+/** Helper function to convert between Buttons and Notes */
+export function buttonToNote(b: CanvasButton): Note {
+
+  switch (b) {
+    case "BlueButton":
+      return "BlueNote";
+    case "YellowButton":
+      return "GreenNote";
+    case "GreenButton":
+      return "YellowNote";
+    case "RedButton":
+      return "RedNote";
+    default:
+      throw Error("Bad button in buttonToNote:" + b);
+  }
 
 }

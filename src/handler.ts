@@ -1,6 +1,7 @@
 import { redrawButton } from "./board";
 import { startPlayingSound, stopPlayingSound } from "./sound";
-import { State, CanvasButton } from "./state";
+import { State, CanvasButton, buttonToNote } from "./state";
+import { resetTune, extendTune, playTune } from "./tune";
 import { dist } from "./utils";
 import {
   blackStripeWidth, centralButtonRadius,
@@ -22,10 +23,24 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
         eventLog("Click", clicked, "redrew");
         state.power = !state.power;
         redrawButton(state, "PowerButton");
+        redrawButton(state, "StrictButton");
+        if (!state.power) {
+          state.depressed = null;
+          stopPlayingSound(state.audio);
+        }
         break;
       case "StrictButton":
         eventLog("Click", clicked, "redrew");
         state.strict = !state.strict;
+        redrawButton(state, "StrictButton");
+        break;
+      case "StartButton":
+        eventLog("Click", clicked, "starting tune");
+        resetTune(state);
+        extendTune(state);
+        extendTune(state);
+        extendTune(state);
+        playTune(state, 0);
         redrawButton(state, "StrictButton");
         break;
       default:
@@ -54,7 +69,7 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
           state.depressed = down;
           eventLog("Down", down, "redrew as depressed");
           redrawButton(state, down);
-          startPlayingSound(state.audio, down);
+          startPlayingSound(state.audio, buttonToNote(down));
           break;
         default:
           eventLog("Down", down, "ignored");
