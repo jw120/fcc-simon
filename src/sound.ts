@@ -1,7 +1,9 @@
-
+/*
+ * Manage sound playing and state, no game logic
+ *
+ */
 
 import { Note } from "./state";
-
 
 export interface AudioState {
   context: AudioContext;

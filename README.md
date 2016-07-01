@@ -21,7 +21,7 @@ Callback madness
 * Sound
 
   + TODO Does gain work?
-  + TODO Add timeout? Is there an event for mousing off page?
+  + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?)
   + TODO Test whether Start -> 3 random notes works
   + TODO Think about logic...
 
@@ -46,3 +46,31 @@ E-note (blue, lower right);  329.628  (was 659.255)
 C-sharp-note (yellow, lower left); 277.183 (was 554.365)
 A-note (red, upper right). 440
 E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
+
+
+Power off - nobuttons active (except power), count blank
+Power on - count to 0
+Start
+  Pause with count flash
+  Random note
+  Time to enter
+  Razz and show !!
+
+  Random note
+    Success registered on mouse up (or time out)
+    Failure registered on mouse down
+
+
+    /*
+
+Press start button
+  Call resetTune()
+    tune <- []
+    currentNote = undefined;
+  Call extendTune()
+    tune <- tune ++ R1
+    Call playNote(0);
+      startNote R0
+      onEnd of play(call playNote(1));
+
+*/

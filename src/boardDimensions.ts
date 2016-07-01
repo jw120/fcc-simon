@@ -1,5 +1,6 @@
 /*
- * Dimensions of the game board used by both board and handler modules
+ * Dimensions of the game board used by both board and event modules
+ *
  */
 
 export const blackStripeWidth: number = 10;

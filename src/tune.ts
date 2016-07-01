@@ -1,19 +1,7 @@
-/* Handle logic for playing the tune for the player to follow */
-
 /*
-
-Press start button
-  Call resetTune()
-    tune <- []
-    currentNote = undefined;
-  Call extendTune()
-    tune <- tune ++ R1
-    Call playNote(0);
-      startNote R0
-      onEnd of play(call playNote(1));
-
-*/
-
+ * Manage playing the tune for the player to follow
+ *
+ */
 
 import { Note, State } from "./state";
 import { startPlayingSound } from "./sound";

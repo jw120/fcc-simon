@@ -1,4 +1,10 @@
-/** Utiity functions */
+/*
+ * Utiity functions
+ *
+ */
+
+/** Should we log events to console.log */
+const eventLogging: boolean = true;
 
 /** Run the given function when document load is complete */
 export function run_when_document_ready(fn: () => void): void {
@@ -33,4 +39,28 @@ export function getContext2D(cvs: HTMLCanvasElement): CanvasRenderingContext2D {
   } else {
     throw Error("Cannot get canvas context");
   }
+}
+
+
+/** Log click event and how we handle it to console */
+export function eventLog(triggerName: string | undefined | null, target: string | undefined | null, action: string): void {
+
+  if (eventLogging) {
+    console.log(padTo(triggerName, 6), padTo(target, 12), ":", action);
+  }
+
+}
+
+/** Right-pad the string with spaces to reach the given length */
+function padTo(s: string | undefined | null, n: number): string {
+
+  if (s === null) {
+    s = "null";
+  } else if (s === undefined) {
+    s = "undefined";
+  }
+
+  let pad: number = n - s.length;
+  return pad > 0 ? s + "                ".substr(0, pad) : s;
+
 }

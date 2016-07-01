@@ -1,6 +1,7 @@
 /*
  * Functions to draw onto the canvas. Functions simply operate on the given
  * canvas context (which they preserve) and have no game or state logic.
+ *
  */
 
 /** Fill a rectangle of given width and height that is centred on given coordinates */

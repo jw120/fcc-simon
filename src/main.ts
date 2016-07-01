@@ -1,7 +1,10 @@
-/** Main programme */
+/*
+ * Main programme
+ *
+ */
 
 import { drawBoard } from "./board";
-import { makeCanvasClickHandler, makeCanvasMouseDownHandler, makeCanvasMouseUpHandler } from "./handler";
+import { makeCanvasClickHandler, makeCanvasMouseDownHandler, makeCanvasMouseUpHandler } from "./event";
 import { initialState, State } from "./state";
 import { run_when_document_ready } from "./utils";
 
