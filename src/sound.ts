@@ -74,3 +74,14 @@ export function stopPlayingSound(audio: AudioState): void {
   }
 
 }
+
+/** Stop playing any sound without calling any onended callback */
+export function resetPlayingSound(audio: AudioState): void {
+
+  if (audio.playingSound) {
+    audio.playingSound.onended = (): void => { /* do nothing */ };
+    audio.playingSound.stop();
+    audio.playingSound = null;
+  }
+
+}

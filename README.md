@@ -1,4 +1,6 @@
 
+
+
 Callback madness
 
 ## TODO
@@ -17,13 +19,12 @@ Callback madness
   + TODO De-pixelate switch label text?
   + TODO Use brighter green? (Put boardColors into separate file)
 
-
 * Sound
+
+  + DONE Test whether Start -> 3 random notes works
 
   + TODO Does gain work?
   + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?)
-  + TODO Test whether Start -> 3 random notes works
-  + TODO Think about logic...
 
 * Logic
 
@@ -31,14 +32,17 @@ Callback madness
   + DONE Handlers to make all buttons light up
     - DONE Notes on mouse down/up (put a "depressed" field into State)
     - DONE Swithches toggle on click
-    - DOME Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
+    - DONE Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
   + DONE Add sounds
-  + TODO Add playback
+
+  + TODO Work through behaviour list below
 
 * Code
 
- + TODO Document all modules - how to make module documentation not merge with first function?
+ + DONE Document all modules - how to make module documentation not merge with first function?
  + DONE Sort out packaging/webpack etc
+
+## Note notes
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are
 
@@ -47,8 +51,33 @@ C-sharp-note (yellow, lower left); 277.183 (was 554.365)
 A-note (red, upper right). 440
 E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 
+## Terminology
 
-Power off - nobuttons active (except power), count blank
+* Tune the sequence of notes that the player has to match
+* The tune is *played* by the Simon game and then *replayed* by the player
+
+## Behaviour (and implementation note)
+
+### Initial power-off state
+
+* Power button active (implented in `event/makeClickHandler` and `handlers/handlePowerClick`)
+* All other buttons inactive (ensured in the three top-level handlers in `event`)
+* Score blank (part of `state/resetState`)
+
+### Powering off
+
+* Move to inital powered off state (in `event/handlePowerClick`)
+* Killing any sound that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
+* Stopping any tune that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
+
+### Powering on
+
+* Score changes to `"--"` (in `event/handlePowerClick`)
+* Start and strict Buttons become active (ensured in `event/makeClickHandler`)
+
+### Pressing Start
+
+
 Power on - count to 0
 Start
   Pause with count flash

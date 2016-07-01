@@ -20,6 +20,7 @@ export interface State {
   context: CanvasRenderingContext2D;
   scale: number | undefined;
   depressed: CanvasButton | null;
+  score: string; // To appear in the score window
 
   // Sound
   audio: AudioState;
@@ -34,22 +35,26 @@ export interface State {
 
 }
 
-/** Set up the initial state */
-export function initialState(): State {
+/** Create a new initial state or reset the given state (e.g. at start or power off )*/
+export function resetState(state?: State): State {
 
-  let canvas: HTMLCanvasElement = document.getElementById("board") as HTMLCanvasElement;
+  state = state || {} as State;
 
-  return {
-    canvas,
-    context: getContext2D(canvas),
-    scale: undefined,
-    audio: newAudioState(),
-    tune: [],
-    notesMatched: null,
-    depressed: null,
-    power: false,
-    strict: false
-  };
+  state.canvas = state.canvas || document.getElementById("board") as HTMLCanvasElement;
+  state.context = state.context || getContext2D(state.canvas);
+  state.scale = undefined;
+  state.depressed = null;
+  state.score = "";
+
+  state.audio = state.audio || newAudioState();
+
+  state.tune = [];
+  state.notesMatched = null;
+
+  state.power = false;
+  state.strict = false;
+
+  return state;
 
 }
 

@@ -64,23 +64,27 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
 
   return (event: MouseEvent) => {
 
-    let down: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+    if (state.power) {
 
-    if (down) {
-      switch (down) {
-        case "RedButton":
-        case "YellowButton":
-        case "BlueButton":
-        case "GreenButton":
-          handleNoteDown(state, down);
-          break;
-        default:
-          eventLog("Down", down, "ignored");
-          // do nothing
+      let down: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+
+      if (down) {
+        switch (down) {
+          case "RedButton":
+          case "YellowButton":
+          case "BlueButton":
+          case "GreenButton":
+            handleNoteDown(state, down);
+            break;
+          default:
+            eventLog("Down", down, "ignored");
+            // do nothing
+        }
       }
-    }
 
-    clearDepressed(state, down);
+      clearDepressed(state, down);
+
+    }
 
   };
 
@@ -91,19 +95,23 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 
   return (event: MouseEvent) => {
 
-    switch (state.depressed) {
-      case "RedButton":
-      case "YellowButton":
-      case "BlueButton":
-      case "GreenButton":
-        handleUpFromNote(state);
-        break;
-      default:
-        eventLog("Up", "", "ignored");
-          // do nothing
-    }
+    if (state.power) {
 
-    clearDepressed(state, null);
+      switch (state.depressed) {
+        case "RedButton":
+        case "YellowButton":
+        case "BlueButton":
+        case "GreenButton":
+          handleUpFromNote(state);
+          break;
+        default:
+          eventLog("Up", "", "ignored");
+            // do nothing
+      }
+
+      clearDepressed(state, null);
+
+    }
 
   };
 

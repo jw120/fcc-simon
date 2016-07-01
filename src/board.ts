@@ -25,7 +25,7 @@ const offSwitchAlpha: number = 0.5;
 const onSwitchAlpha: number = 1;
 
 /** Draw the Simon board on the canvas */
-export function drawBoard(state: State): void {
+export function redrawBoard(state: State): void {
 
   // Draw the borders
   fillCentredCircle(state.context, 0, 0, outerBorderOutsideRadius, "black");
@@ -56,7 +56,7 @@ export function drawBoard(state: State): void {
   redrawButton(state, "RedButton");
 
   // Add the score
-  centredText(state.context, 0, - 0.3 * innerBorderInsideRadius, "0", "20px sans-serif");
+  redrawScore(state);
 
 }
 
@@ -121,5 +121,9 @@ export function redrawButton(state: State, b: CanvasButton): void {
 
 }
 
+export function redrawScore(state: State): void {
 
+  centredText(state.context, 0, - 0.3 * innerBorderInsideRadius, state.score, "20px sans-serif");
+
+}
 

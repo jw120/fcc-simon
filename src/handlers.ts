@@ -3,25 +3,30 @@
  *
  */
 
-import { redrawButton } from "./board";
-import { startPlayingSound, stopPlayingSound } from "./sound";
-import { State, CanvasButton, buttonToNote } from "./state";
+import { redrawBoard, redrawButton, redrawScore } from "./board";
+import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
+import { State, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog } from "./utils";
 
 /** Handle a click on the power button */
 export function handlePowerClick(state: State): void {
 
-  // TODO Full reset of state ? Stop any sound?
-
   eventLog("Click", "PowerButton", "redrew");
 
-  state.power = !state.power;
-  redrawButton(state, "PowerButton");
-  redrawButton(state, "StrictButton");
-  if (!state.power) {
-    state.depressed = null;
-    stopPlayingSound(state.audio);
+  if (state.power) { // Powering down - reset and redraw everything
+
+    resetPlayingSound(state.audio);
+    resetState(state);
+    redrawBoard(state);
+
+  } else { // We are powering on
+
+    state.power = true;
+    state.score = "--";
+    redrawScore(state);
+    redrawButton(state, "PowerButton");
+
   }
 
 }

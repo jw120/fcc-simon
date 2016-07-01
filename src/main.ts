@@ -3,17 +3,17 @@
  *
  */
 
-import { drawBoard } from "./board";
+import { redrawBoard } from "./board";
 import { makeCanvasClickHandler, makeCanvasMouseDownHandler, makeCanvasMouseUpHandler } from "./event";
-import { initialState, State } from "./state";
+import { resetState, State } from "./state";
 import { run_when_document_ready } from "./utils";
 
 run_when_document_ready((): void => {
 
-  let state: State = initialState();
+  let state: State = resetState();
 
   modifyScale(state);
-  drawBoard(state);
+  redrawBoard(state);
 
   state.canvas.addEventListener("click", makeCanvasClickHandler(state), false);
   state.canvas.addEventListener("mousedown", makeCanvasMouseDownHandler(state), false);
@@ -21,7 +21,7 @@ run_when_document_ready((): void => {
 
   window.onresize = () => {
     modifyScale(state);
-    drawBoard(state);
+    redrawBoard(state);
   };
 
 });
