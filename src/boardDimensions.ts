@@ -10,3 +10,5 @@ export const innerBorderInsideRadius: number = 30;
 export const innerBorderOutsideRadius: number = innerBorderInsideRadius + 0.5 * blackStripeWidth;
 export const centralButtonRadius: number = 5;
 export const centralButtonRingRadius: number = 6;
+
+export const flashDelay: number = 300; // milliseconds

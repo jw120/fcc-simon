@@ -12,6 +12,9 @@ export type CanvasButton =
 export type Note =
   "BlueNote" | "GreenNote" | "YellowNote" | "RedNote";
 
+export type Score =
+  number | "Blank" | "Dashes";
+
 /** Define the global state that will be shared between modules */
 export interface State {
 
@@ -20,7 +23,7 @@ export interface State {
   context: CanvasRenderingContext2D;
   scale: number | undefined;
   depressed: CanvasButton | null;
-  score: string; // To appear in the score window
+  score: Score; // To appear in the score window
 
   // Sound
   audio: AudioState;
@@ -44,7 +47,7 @@ export function resetState(state?: State): State {
   state.context = state.context || getContext2D(state.canvas);
   state.scale = undefined;
   state.depressed = null;
-  state.score = "";
+  state.score = "Blank";
 
   state.audio = state.audio || newAudioState();
 

@@ -4,9 +4,10 @@
  */
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
+import { flashDelay } from "./boardDimensions";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
 import { State, CanvasButton, buttonToNote, resetState } from "./state";
-import { resetTune, extendTune, playTune } from "./tune";
+// import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog } from "./utils";
 
 /** Handle a click on the power button */
@@ -23,7 +24,7 @@ export function handlePowerClick(state: State): void {
   } else { // We are powering on
 
     state.power = true;
-    state.score = "--";
+    state.score = "Dashes";
     redrawScore(state);
     redrawButton(state, "PowerButton");
 
@@ -45,13 +46,19 @@ export function handleStrictClick(state: State): void {
 /** Handle a click on the start button (with power on) */
 export function handleStartClick(state: State): void {
 
-    eventLog("Click", "StartButton", "starting tune");
+    eventLog("Click", "StartButton", "start sequence beginning");
 
-    resetTune(state);
-    extendTune(state);
-    playTune(state, 0);
+    flashScore(state, 3, () => {
+      state.score = 1;
+      redrawScore(state);
+      console.log("Flashing finished");
+    });
 
-    redrawButton(state, "StrictButton");
+
+    // resetTune(state);
+    // extendTune(state);
+    // playTune(state, 0);
+
 
 }
 
@@ -87,3 +94,15 @@ export function handleUpFromNote(state: State): void {
 
 }
 
+/* Update score in --/blank/--/blank sequence, calling next step after delay and then final callback*/
+function flashScore(state: State, n: number, finalCb: ((s: State) => void)): void {
+
+  state.score = n % 2 ? "Blank" : "Dashes";
+  redrawScore(state);
+  if (n > 0) {
+    setTimeout(() => flashScore(state, n - 1, finalCb), flashDelay);
+  } else {
+    finalCb(state);
+  }
+
+}

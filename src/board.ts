@@ -123,7 +123,23 @@ export function redrawButton(state: State, b: CanvasButton): void {
 
 export function redrawScore(state: State): void {
 
-  centredText(state.context, 0, - 0.3 * innerBorderInsideRadius, state.score, "20px sans-serif");
+  let show: string;
+  switch (state.score) {
+    case "Blank":
+      show = "";
+      break;
+    case "Dashes":
+      show = "--";
+      break;
+    default:
+      show = (state.score >= 0 && state.score <= 9) ? "0" + state.score : state.score.toString();
+  }
+
+  fillCentredRectangle(
+    state.context,
+    0, -0.3 * innerBorderInsideRadius, 1.4 * innerBorderInsideRadius, 0.7 * innerBorderInsideRadius,
+    centralBackgroundColour);
+  centredText(state.context, 0, - 0.3 * innerBorderInsideRadius, show, "20px sans-serif");
 
 }
 

@@ -24,7 +24,7 @@ Callback madness
   + DONE Test whether Start -> 3 random notes works
 
   + TODO Does gain work?
-  + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?)
+  + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?) Use mouseout?
 
 * Logic
 
@@ -76,6 +76,14 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 * Start and strict Buttons become active (ensured in `event/makeClickHandler`)
 
 ### Pressing Start
+
+* Score flashes off/on/off/on (in `event/handleStartClick`)
+* Score moves to 01 and first note plays
+* Playing of last note (only) is interruptible
+* Wait for user input
+* Time out the same as failure
+* User input
+* Failure back to 1 if strict, repeat if non-strict
 
 
 Power on - count to 0
