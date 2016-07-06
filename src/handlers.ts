@@ -7,7 +7,7 @@ import { redrawBoard, redrawButton, redrawScore } from "./board";
 import { flashDelay } from "./boardDimensions";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
 import { State, CanvasButton, buttonToNote, resetState } from "./state";
-// import { resetTune, extendTune, playTune } from "./tune";
+import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog } from "./utils";
 
 /** Handle a click on the power button */
@@ -51,13 +51,16 @@ export function handleStartClick(state: State): void {
     flashScore(state, 3, () => {
       state.score = 1;
       redrawScore(state);
-      console.log("Flashing finished");
+
+      resetTune(state);
+      extendTune(state);
+      extendTune(state);
+      extendTune(state);
+      playTune(state, 0);
+
     });
 
 
-    // resetTune(state);
-    // extendTune(state);
-    // playTune(state, 0);
 
 
 }

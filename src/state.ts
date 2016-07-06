@@ -23,6 +23,7 @@ export interface State {
   context: CanvasRenderingContext2D;
   scale: number | undefined;
   depressed: CanvasButton | null;
+  playing: Note | null;
   score: Score; // To appear in the score window
 
   // Sound
@@ -47,6 +48,7 @@ export function resetState(state?: State): State {
   state.context = state.context || getContext2D(state.canvas);
   state.scale = undefined;
   state.depressed = null;
+  state.playing = null;
   state.score = "Blank";
 
   state.audio = state.audio || newAudioState();
@@ -68,13 +70,31 @@ export function buttonToNote(b: CanvasButton): Note {
     case "BlueButton":
       return "BlueNote";
     case "YellowButton":
-      return "GreenNote";
-    case "GreenButton":
       return "YellowNote";
+    case "GreenButton":
+      return "GreenNote";
     case "RedButton":
       return "RedNote";
     default:
       throw Error("Bad button in buttonToNote:" + b);
+  }
+
+}
+
+/** Helper function to convert between Notes and Buttons */
+export function noteToButton(n: Note): CanvasButton {
+
+  switch (n) {
+    case "BlueNote":
+      return "BlueButton";
+    case "YellowNote":
+      return "YellowButton";
+    case "GreenNote":
+      return "GreenButton";
+    case "RedNote":
+      return "RedButton";
+    default:
+      throw Error("Bad note in noteToButton:" + n);
   }
 
 }

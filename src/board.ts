@@ -3,7 +3,7 @@
  *
  */
 
-import { State, CanvasButton } from "./state";
+import { State, CanvasButton, buttonToNote } from "./state";
 import {
   fillCentredRectangle, fillCentredCircle, fillCentredCircleCleanAlpha,
   fillNoteButtonShapeCleanAlpha, centredText
@@ -69,28 +69,28 @@ export function redrawButton(state: State, b: CanvasButton): void {
     fillNoteButtonShapeCleanAlpha(
         state.context, 0,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", "blue", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "blue", state.depressed === b || state.playing === buttonToNote(b) ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "YellowButton":
     fillNoteButtonShapeCleanAlpha(
         state.context, 1,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", "yellow", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "yellow", state.depressed === b || state.playing === buttonToNote(b) ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "GreenButton":
     fillNoteButtonShapeCleanAlpha(
         state.context, 2,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", "green", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "green", state.depressed === b || state.playing === buttonToNote(b) ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "RedButton":
     fillNoteButtonShapeCleanAlpha(
         state.context, 3,
         innerBorderOutsideRadius, outerBorderInsideRadius, blackStripeWidth / 2,
-        "black", "red", state.depressed === b ? brightNoteAlpha : normalNoteAlpha);
+        "black", "red", state.depressed === b || state.playing === buttonToNote(b) ? brightNoteAlpha : normalNoteAlpha);
       break;
 
     case "PowerButton":

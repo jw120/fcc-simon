@@ -78,7 +78,7 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 ### Pressing Start
 
 * Score flashes off/on/off/on (in `event/handleStartClick`)
-* Score moves to 01 and first note plays
+* Score moves to 01 and first note plays (in `event/handleStartClick`)
 * Playing of last note (only) is interruptible
 * Wait for user input
 * Time out the same as failure

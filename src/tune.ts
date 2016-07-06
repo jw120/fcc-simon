@@ -3,8 +3,9 @@
  *
  */
 
-import { Note, State } from "./state";
+import { Note, State, noteToButton } from "./state";
 import { startPlayingSound } from "./sound";
+import { redrawButton } from "./board"
 
 /** Duration of each note when we play the tune (in seconds) */
 const tuneNoteDuration: number = 1;
@@ -24,9 +25,23 @@ export function extendTune(state: State): void {
 
 export function playTune(state: State, i: number): void {
 
-  if (i < state.tune.length) {
-    startPlayingSound(state.audio, state.tune[i], tuneNoteDuration, () => playTune(state, i + 1));
+  let oldPlaying: Note | null = state.playing;
+  state.playing = null;
+
+  if (oldPlaying) {
+    redrawButton(state, noteToButton(oldPlaying));
   }
+
+  if (i < state.tune.length) {
+
+    let nextNote: Note = state.tune[i];
+
+    startPlayingSound(state.audio, nextNote, tuneNoteDuration, () => playTune(state, i + 1));
+    state.playing = nextNote;
+    redrawButton(state, noteToButton(nextNote));
+
+  }
+
 
 }
 
