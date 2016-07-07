@@ -5,10 +5,10 @@
 
 import { Note, State, noteToButton } from "./state";
 import { startPlayingSound } from "./sound";
-import { redrawButton } from "./board"
+import { redrawButton } from "./board";
+import { tuneNoteDuration, tuneGapDuration } from "./boardDimensions";
+import { stepLog } from "./utils";
 
-/** Duration of each note when we play the tune (in seconds) */
-const tuneNoteDuration: number = 1;
 
 /** Reset the current tune (e.g., after pressing Start button) */
 export function resetTune(state: State): void {
@@ -25,20 +25,29 @@ export function extendTune(state: State): void {
 
 export function playTune(state: State, i: number): void {
 
+  stepLog("Play" + i, "starting");
+
   let oldPlaying: Note | null = state.playing;
   state.playing = null;
 
   if (oldPlaying) {
     redrawButton(state, noteToButton(oldPlaying));
+    stepLog("Play" + i, "redraw old note" + oldPlaying);
+
   }
 
   if (i < state.tune.length) {
 
     let nextNote: Note = state.tune[i];
 
-    startPlayingSound(state.audio, nextNote, tuneNoteDuration, () => playTune(state, i + 1));
-    state.playing = nextNote;
-    redrawButton(state, noteToButton(nextNote));
+    startPlayingSound(state.audio, nextNote, tuneNoteDuration, () => {
+
+      setTimeout(() => playTune(state, i + 1), i > 0 ? tuneGapDuration : 0);
+
+      state.playing = nextNote;
+      redrawButton(state, noteToButton(nextNote));
+
+    });
 
   }
 

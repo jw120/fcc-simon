@@ -4,7 +4,7 @@
  */
 
 /** Should we log events to console.log */
-const eventLogging: boolean = true;
+const logging: boolean = true;
 
 /** Run the given function when document load is complete */
 export function run_when_document_ready(fn: () => void): void {
@@ -45,11 +45,31 @@ export function getContext2D(cvs: HTMLCanvasElement): CanvasRenderingContext2D {
 /** Log click event and how we handle it to console */
 export function eventLog(triggerName: string | undefined | null, target: string | undefined | null, action: string): void {
 
-  if (eventLogging) {
+  if (logging) {
     console.log(padTo(triggerName, 6), padTo(target, 12), ":", action);
   }
 
 }
+
+/** Log calll event  */
+export function stepLog(stepName: string | undefined | null, message: string): void {
+
+  if (logging) {
+    console.log(padTo(stepName, 6), padTo((Date.now() % 10000000).toString(), 12), ":", message);
+  }
+
+}
+
+/** Log anything */
+export function log(...args: any[]): void {
+
+  if (logging) {
+    console.log.apply(console, [padTo("", 6)].concat(args));
+  }
+
+}
+
+
 
 /** Right-pad the string with spaces to reach the given length */
 function padTo(s: string | undefined | null, n: number): string {

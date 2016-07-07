@@ -6,7 +6,7 @@
 
 import { redrawButton } from "./board";
 import { State, CanvasButton } from "./state";
-import { dist, eventLog } from "./utils";
+import { dist, eventLog, log } from "./utils";
 import {
   handlePowerClick, handleStrictClick, handleStartClick, handleNoteDown, handleUpFromNote
 } from "./handlers";
@@ -22,6 +22,8 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
   return (event: MouseEvent) => {
 
     let clicked: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
+
+    // log("Click at", event.pageX, event.pageY, ":", clicked);
 
     if (state.power) {
 
@@ -120,10 +122,14 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
 function findCanvasButton(coords: [number, number]): CanvasButton | null {
 
+  log("Find called with", coords);
+
   let x: number = coords[0];
   let y: number = coords[1];
 
   let r: number = Math.sqrt(x * x + y * y);
+
+  // // log("finding", x.toFixed(2), ",", y.toFixed(2), ", r=", r.toFixed(2));
 
   if (r > innerBorderOutsideRadius && r < outerBorderInsideRadius) {
 
@@ -164,6 +170,8 @@ function findCanvasButton(coords: [number, number]): CanvasButton | null {
 /** Helper function to return scaled coordinates */
 function scaledCoords(state: State, pageX: number, pageY: number): [number, number] {
 
+  // log("Scaling with", state.canvas.offsetLeft, state.canvas.height, state.scale);
+
   // Pixel coordinates of click relative to canvas
   let pixelX: number = pageX - state.canvas.offsetLeft;
   let pixelY: number = pageY - state.canvas.offsetTop;
@@ -182,7 +190,7 @@ function clearDepressed(state: State, newButton: CanvasButton | null): void {
 
     let oldDepressed: CanvasButton | null = state.depressed;
     if (oldDepressed && oldDepressed !== newButton) {
-      eventLog("", "", "redrew old depressed " + oldDepressed);
+      // log("redrew old depressed", oldDepressed);
       redrawButton(state, oldDepressed);
     }
 

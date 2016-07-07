@@ -59,9 +59,27 @@ export function resetState(state?: State): State {
   state.power = false;
   state.strict = false;
 
+  updateScale(state);
+
   return state;
 
 }
+
+/** Modify state to reflect canvas and window size */
+export function updateScale(state: State): void {
+
+  // We set the canvas to fill most of the available window
+  state.canvas.width = window.innerWidth - 20;
+  state.canvas.height = window.innerHeight - 100; // Allow space for footer
+
+  // We transform the canvas so a square with coordinates (-100, -100) to (100, 100)
+  // appears as the largest centred squate that will fit on the canvas
+  const canvasMax: number = 100;
+  state.scale = Math.min(state.canvas.width, state.canvas.height) / (2 * canvasMax);
+  state.context.transform(state.scale, 0, 0, state.scale, state.canvas.width / 2, state.canvas.height / 2);
+
+}
+
 
 /** Helper function to convert between Buttons and Notes */
 export function buttonToNote(b: CanvasButton): Note {
