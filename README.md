@@ -41,6 +41,7 @@ Callback madness
 
  + DONE Document all modules - how to make module documentation not merge with first function?
  + DONE Sort out packaging/webpack etc
+ * TODO Use nicer import format namespace and default?
 
 ## Note notes
 
@@ -66,19 +67,26 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 
 ### Powering off
 
-* Move to inital powered off state (in `event/handlePowerClick`)
+* Move to inital powered off state (in `handlers/handlePowerClick`)
 * Killing any sound that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
 * Stopping any tune that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
 
 ### Powering on
 
-* Score changes to `"--"` (in `event/handlePowerClick`)
+* Score changes to `"--"` (in `handlers/handlePowerClick`)
 * Start and strict Buttons become active (ensured in `event/makeClickHandler`)
 
 ### Pressing Start
 
-* Score flashes off/on/off/on (in `event/handleStartClick`)
-* Score moves to 01 and first note plays (in `event/handleStartClick`)
+* Score flashes off/on/off/on/pause (in `handle/handleStartClick`)
+* Start tune play back with single note in `handle/handleStartClick)
+
+### Tune playback
+
+* Notes play with gaps and lighting up notes as they play
+
+Below - todo
+
 * Playing of last note (only) is interruptible
 * Wait for user input
 * Time out the same as failure

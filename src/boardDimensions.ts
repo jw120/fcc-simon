@@ -12,9 +12,10 @@ export const centralButtonRadius: number = 5;
 export const centralButtonRingRadius: number = 6;
 
 export const flashDelay: number = 300; // milliseconds
+export const finalFlashDelay: number = 800;
 
 /** Duration of each note when we play the tune (in seconds) */
-export const tuneNoteDuration: number = 1;
+export const tuneNoteDuration: number = 2;
 
 /** Duration of pause between each note when we play the tune (in millseconds) */
-export const tuneGapDuration: number = 500;
+export const tuneGapDuration: number = 1000;

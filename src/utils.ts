@@ -55,7 +55,7 @@ export function eventLog(triggerName: string | undefined | null, target: string 
 export function stepLog(stepName: string | undefined | null, message: string): void {
 
   if (logging) {
-    console.log(padTo(stepName, 6), padTo((Date.now() % 10000000).toString(), 12), ":", message);
+    console.log(padTo(stepName, 6), padTo((Date.now() % 100000).toString(), 12), ":", message);
   }
 
 }

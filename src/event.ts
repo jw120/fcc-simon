@@ -122,7 +122,7 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
 function findCanvasButton(coords: [number, number]): CanvasButton | null {
 
-  log("Find called with", coords);
+  // log("Find called with", coords);
 
   let x: number = coords[0];
   let y: number = coords[1];

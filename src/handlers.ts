@@ -4,7 +4,7 @@
  */
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
-import { flashDelay } from "./boardDimensions";
+import { flashDelay, finalFlashDelay } from "./boardDimensions";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
 import { State, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
@@ -49,13 +49,13 @@ export function handleStartClick(state: State): void {
     eventLog("Click", "StartButton", "start sequence beginning");
 
     flashScore(state, 3, () => {
-      state.score = 1;
-      redrawScore(state);
+//      state.score = 1;
 
       resetTune(state);
       extendTune(state);
       extendTune(state);
       extendTune(state);
+      redrawScore(state);
       playTune(state, 0);
 
     });
@@ -102,10 +102,15 @@ function flashScore(state: State, n: number, finalCb: ((s: State) => void)): voi
 
   state.score = n % 2 ? "Blank" : "Dashes";
   redrawScore(state);
+
   if (n > 0) {
+
     setTimeout(() => flashScore(state, n - 1, finalCb), flashDelay);
+
   } else {
-    finalCb(state);
+
+    setTimeout(() => finalCb(state), finalFlashDelay);
+
   }
 
 }
