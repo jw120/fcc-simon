@@ -4,7 +4,7 @@
  */
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
-import { flashDelay, finalFlashDelay, maxPlaybackNoteDuration, afterPlaybackDuration } from "./boardDimensions";
+import { flashDelay, finalFlashDelay, maxReplayNoteDuration, afterReplayDuration } from "./boardDimensions";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
 import { State, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
@@ -68,7 +68,7 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 
   if (state.notesMatched !== null) {
 
-    eventLog("Down", "b", "note down during playback phase");
+    eventLog("Down", "b", "note down during replay phase");
 
     state.depressed = b;
     eventLog("Down", b, "redrew as depressed");
@@ -76,7 +76,7 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 
     if (buttonToNote(b) === state.tune[state.notesMatched]) {
 
-      startPlayingSound(state.audio, buttonToNote(b), maxPlaybackNoteDuration, () => endPlayingNote(state));
+      startPlayingSound(state.audio, buttonToNote(b), maxReplayNoteDuration, () => endPlayingNote(state));
 
     }
 
@@ -123,7 +123,7 @@ function endPlayingNote(state: State): void {
 
   if (state.depressed !== null && state.notesMatched !== null) {
 
-    const oldPlaying = state.depressed;
+    const oldPlaying: CanvasButton = state.depressed;
     state.depressed = null;
     redrawButton(state, oldPlaying);
 
@@ -135,7 +135,7 @@ function endPlayingNote(state: State): void {
           redrawScore(state);
           playTune(state, 0);
         },
-        afterPlaybackDuration
+        afterReplayDuration
       );
     }
 

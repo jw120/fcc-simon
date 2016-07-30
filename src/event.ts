@@ -6,7 +6,7 @@
 
 import { redrawButton } from "./board";
 import { State, CanvasButton } from "./state";
-import { dist, eventLog, log } from "./utils";
+import { dist, eventLog } from "./utils";
 import {
   handlePowerClick, handleStrictClick, handleStartClick, handleNoteDown, handleUpFromNote
 } from "./handlers";
