@@ -42,6 +42,7 @@ Callback madness
  + DONE Document all modules - how to make module documentation not merge with first function?
  + DONE Sort out packaging/webpack etc
  * TODO Use nicer import format namespace and default?
+ * TODO Everything in milliseconds (and document that for all functions that take sounds)
 
 ## Note notes
 
@@ -78,16 +79,28 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 
 ### Pressing Start
 
-* Score flashes off/on/off/on/pause (in `handle/handleStartClick`)
-* Start tune play back with single note in `handle/handleStartClick)
+* Score flashes off/on/off/on/pause (in `handlers/handleStartClick`)
+* Start tune play back with single note (in `handlers/handleStartClick)
 
-### Tune playback
+### Tune playing
 
-* Notes play with gaps and lighting up notes as they play
+* Notes play with gaps and lighting up notes as they play (in `tune/playTune`)
+* Ignore note presses and clicks until tune finished (in `handlers/handleNoteDown`)
+
+### Tune playback phase
+
+* Correct note
+
+  + Mouse down on correct note starts note playing and lights up note (in `handlers/handleNoteDown`)
+  + Mouse up on correct note ends note playing and unlights note (in `handlers/handleNoteUp`)
+  + Timeout while playing note ends note playing and unlights note (in `handlers/handleNoteDown`)
+  + On ending final note, pause and extend the tune (in `handlers/endPlayingNote`)
+
+* Wrong note
+
 
 Below - todo
 
-* Playing of last note (only) is interruptible
 * Wait for user input
 * Time out the same as failure
 * User input

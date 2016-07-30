@@ -28,21 +28,13 @@ export function playTune(state: State, i: number): void {
 
   stepLog("Play" + i, "starting");
 
-  // let oldPlaying: Note | null = state.playing;
-  // state.playing = null;
-
-  // if (oldPlaying) {
-
-  //   redrawButton(state, noteToButton(oldPlaying));
-  //   stepLog("Play" + i, "redraw old note" + oldPlaying);
-
-  // }
 
   if (i < state.tune.length) {
 
     let nextNote: Note = state.tune[i];
 
     state.playing = nextNote;
+    state.notesMatched = null;
     redrawButton(state, noteToButton(nextNote));
 
     startPlayingSound(state.audio, nextNote, tuneNoteDuration, () => {
@@ -50,13 +42,14 @@ export function playTune(state: State, i: number): void {
       state.playing = null;
       redrawButton(state, noteToButton(nextNote));
 
-      setTimeout(() => playTune(state, i + 1), tuneGapDuration);
+      setTimeout(() => playTune(state, i + 1), i < state.tune.length - 1 ? tuneGapDuration : 0);
 
     });
 
   } else {
 
-    stepLog("Play", "finished");
+    stepLog("Play", "finished, notesMatched to zero");
+    state.notesMatched = 0;
 
   }
 

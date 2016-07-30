@@ -19,3 +19,9 @@ export const tuneNoteDuration: number = 2;
 
 /** Duration of pause between each note when we play the tune (in millseconds) */
 export const tuneGapDuration: number = 1000;
+
+/** Maxium duration of a note during playback phase (seconds) */
+export const maxPlaybackNoteDuration: number = 5;
+
+/** Time to wait after completing a playback phase before extending (milliseconds) */
+export const afterPlaybackDuration: number = 1000;

@@ -4,7 +4,7 @@
  */
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
-import { flashDelay, finalFlashDelay } from "./boardDimensions";
+import { flashDelay, finalFlashDelay, maxPlaybackNoteDuration, afterPlaybackDuration } from "./boardDimensions";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
 import { State, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
@@ -49,12 +49,10 @@ export function handleStartClick(state: State): void {
     eventLog("Click", "StartButton", "start sequence beginning");
 
     flashScore(state, 3, () => {
-//      state.score = 1;
 
       resetTune(state);
       extendTune(state);
-      extendTune(state);
-      extendTune(state);
+
       redrawScore(state);
       playTune(state, 0);
 
@@ -70,14 +68,16 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 
   if (state.notesMatched !== null) {
 
-    eventLog("Down", "b", "note down during replay");
+    eventLog("Down", "b", "note down during playback phase");
 
     state.depressed = b;
     eventLog("Down", b, "redrew as depressed");
     redrawButton(state, b);
 
     if (buttonToNote(b) === state.tune[state.notesMatched]) {
-      startPlayingSound(state.audio, buttonToNote(b));
+
+      startPlayingSound(state.audio, buttonToNote(b), maxPlaybackNoteDuration, () => endPlayingNote(state));
+
     }
 
   } else {
@@ -92,8 +92,10 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 export function handleUpFromNote(state: State): void {
 
   eventLog("Up", undefined, "from note, stops sound ");
-  state.depressed = null;
   stopPlayingSound(state.audio);
+  if (state.depressed !== null) {
+    endPlayingNote(state);
+  }
 
 }
 
@@ -110,6 +112,32 @@ function flashScore(state: State, n: number, finalCb: ((s: State) => void)): voi
   } else {
 
     setTimeout(() => finalCb(state), finalFlashDelay);
+
+  }
+
+}
+
+
+/** Helper function to unlight playing note and */
+function endPlayingNote(state: State): void {
+
+  if (state.depressed !== null && state.notesMatched !== null) {
+
+    const oldPlaying = state.depressed;
+    state.depressed = null;
+    redrawButton(state, oldPlaying);
+
+    state.notesMatched = state.notesMatched + 1;
+    if (state.notesMatched >= state.tune.length) {
+      setTimeout(
+        () => {
+          extendTune(state);
+          redrawScore(state);
+          playTune(state, 0);
+        },
+        afterPlaybackDuration
+      );
+    }
 
   }
 
