@@ -131,6 +131,9 @@ export function redrawScore(state: State): void {
     case "Dashes":
       show = "--";
       break;
+    case "Plings":
+      show = "!!";
+      break;
     default:
       show = (state.score >= 0 && state.score <= 9) ? "0" + state.score : state.score.toString();
   }

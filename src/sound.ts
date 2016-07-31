@@ -4,6 +4,7 @@
  */
 
 import { Note } from "./state";
+import { failureSoundDuration } from "./boardDimensions";
 
 export interface AudioState {
   context: AudioContext;
@@ -85,3 +86,22 @@ export function resetPlayingSound(audio: AudioState): void {
   }
 
 }
+
+
+/** Play the failure sound and follow the given callback when sound ends */
+export function playFailureSound(audio: AudioState, cb: (() => void)): void {
+
+  let osc: OscillatorNode | undefined = audio.context.createOscillator();
+  if (!osc) {
+    throw Error("Failed to create oscillator node");
+  }
+  osc.type = "square";
+  osc.connect(audio.gainNode);
+  osc.frequency.value = 66;
+
+  osc.start();
+  osc.stop(audio.context.currentTime + failureSoundDuration);
+  osc.onended = cb;
+
+}
+

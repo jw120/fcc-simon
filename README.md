@@ -24,6 +24,7 @@ Callback madness
   + DONE Test whether Start -> 3 random notes works
 
   + TODO Does gain work?
+  + TODO Check correct notes
   + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?) Use mouseout?
 
 * Logic
@@ -43,6 +44,7 @@ Callback madness
  + DONE Sort out packaging/webpack etc
  * TODO Use nicer import format namespace and default?
  * TODO Everything in milliseconds (and document that for all functions that take sounds)
+ * TODO Frequencies (notes and failure) in constants module
 
 ## Note notes
 
@@ -95,40 +97,16 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
   + Mouse up on correct note ends note playing and unlights note (in `handlers/handleNoteUp`)
   + Timeout while playing note ends note playing and unlights note (in `handlers/handleNoteDown`)
   + On ending final note, pause and extend the tune (in `handlers/endPlayingNote`)
+  + Handle 20 note win condition TODO
 
 * Wrong note
 
+  + Mouse down triggers raspberry  and flashing !! in score with note pressed being lit until raspberry ends
+  + If non-strict mode: Then pause, play current tune again and continue
+  + If strict mode: pause and start a new length-1 tune and continue
 
-Below - todo
+* Timeout
 
-* Wait for user input
-* Time out the same as failure
-* User input
-* Failure back to 1 if strict, repeat if non-strict
-
-
-Power on - count to 0
-Start
-  Pause with count flash
-  Random note
-  Time to enter
-  Razz and show !!
-
-  Random note
-    Success registered on mouse up (or time out)
-    Failure registered on mouse down
+  + TODO
 
 
-    /*
-
-Press start button
-  Call resetTune()
-    tune <- []
-    currentNote = undefined;
-  Call extendTune()
-    tune <- tune ++ R1
-    Call playNote(0);
-      startNote R0
-      onEnd of play(call playNote(1));
-
-*/

@@ -25,3 +25,9 @@ export const maxReplayNoteDuration: number = 5;
 
 /** Time to wait after completing a replay phase before extending (milliseconds) */
 export const afterReplayDuration: number = 1000;
+
+/** Time to wait after the failure noise (milliseconds) */
+export const afterFailureDuration: number = 1000;
+
+/** Duration of the failure sound (seconds) */
+export const failureSoundDuration: number = 1.5;

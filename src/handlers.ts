@@ -4,9 +4,9 @@
  */
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
-import { flashDelay, finalFlashDelay, maxReplayNoteDuration, afterReplayDuration } from "./boardDimensions";
-import { startPlayingSound, stopPlayingSound, resetPlayingSound } from "./sound";
-import { State, CanvasButton, buttonToNote, resetState } from "./state";
+import { flashDelay, finalFlashDelay, maxReplayNoteDuration, afterFailureDuration, afterReplayDuration } from "./boardDimensions";
+import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
+import { State, Score, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog } from "./utils";
 
@@ -47,26 +47,14 @@ export function handleStrictClick(state: State): void {
 export function handleStartClick(state: State): void {
 
     eventLog("Click", "StartButton", "start sequence beginning");
-
-    flashScore(state, 3, () => {
-
-      resetTune(state);
-      extendTune(state);
-
-      redrawScore(state);
-      playTune(state, 0);
-
-    });
-
-
-
+    newRound(state);
 
 }
 
 /** Handle a mouseDown event on a note Button given that power is on */
 export function handleNoteDown(state: State, b: CanvasButton): void {
 
-  if (state.notesMatched !== null) {
+  if (state.notesMatched !== null) { // if we are in replay mode
 
     eventLog("Down", "b", "note down during replay phase");
 
@@ -74,9 +62,39 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
     eventLog("Down", b, "redrew as depressed");
     redrawButton(state, b);
 
-    if (buttonToNote(b) === state.tune[state.notesMatched]) {
+    if (buttonToNote(b) === state.tune[state.notesMatched]) { // Correct note
 
       startPlayingSound(state.audio, buttonToNote(b), maxReplayNoteDuration, () => endPlayingNote(state));
+
+    } else { // Wrong note
+
+      playFailureSound(state.audio, () => { // Play failure then clear the note button
+        state.depressed = null;
+        redrawButton(state, b);
+      });
+
+      state.notesMatched = null;
+      flashScore(state, "Plings", 3, () => { // Flash failure method
+
+        setTimeout( // Pause and then...
+          () => {
+            if (state.strict) { // Go back to beginning of the round if we are in strict mode
+
+              newRound(state);
+
+            } else { // Start replay again if non-strict
+
+              state.score = state.tune.length;
+              redrawScore(state);
+              playTune(state, 0);
+              state.notesMatched = 0;
+
+            }
+          },
+          afterFailureDuration
+        );
+
+      } );
 
     }
 
@@ -99,15 +117,15 @@ export function handleUpFromNote(state: State): void {
 
 }
 
-/* Update score in --/blank/--/blank sequence, calling next step after delay and then final callback*/
-function flashScore(state: State, n: number, finalCb: ((s: State) => void)): void {
+/* Update score in X/blank/X/blank sequence, calling next step after delay and then final callback*/
+function flashScore(state: State, x: Score, n: number, finalCb: ((s: State) => void)): void {
 
-  state.score = n % 2 ? "Blank" : "Dashes";
+  state.score = n % 2 ? "Blank" : x;
   redrawScore(state);
 
   if (n > 0) {
 
-    setTimeout(() => flashScore(state, n - 1, finalCb), flashDelay);
+    setTimeout(() => flashScore(state, x, n - 1, finalCb), flashDelay);
 
   } else {
 
@@ -140,5 +158,21 @@ function endPlayingNote(state: State): void {
     }
 
   }
+
+}
+
+
+/** Helper function to start a new round */
+function newRound(state: State): void {
+
+      flashScore(state, "Dashes", 3, () => {
+
+        resetTune(state);
+        extendTune(state);
+
+        redrawScore(state);
+        playTune(state, 0);
+
+    });
 
 }
