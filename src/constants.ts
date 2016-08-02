@@ -141,7 +141,7 @@ const insideRadius: number = 30;
 const constants: Constants = {
   window: {
     widthReserved: 20,
-    heightReserved: 100,
+    heightReserved: 100
   },
   boardDimensions: {
     canvasSize: 100,

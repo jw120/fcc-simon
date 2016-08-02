@@ -52,7 +52,7 @@ export function resetState(oldState?: State): State {
   newState.playing = null;
   newState.score = "Blank";
 
-  newState.audio = (oldState && oldState.audio) || newAudioState()
+  newState.audio = (oldState && oldState.audio) || newAudioState();
 
   newState.tune = [];
   newState.notesMatched = null;
