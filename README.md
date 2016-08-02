@@ -97,13 +97,13 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
   + Mouse up on correct note ends note playing and unlights note (in `handlers/handleNoteUp`)
   + Timeout while playing note ends note playing and unlights note (in `handlers/handleNoteDown`)
   + On ending final note, pause and extend the tune (in `handlers/endPlayingNote`)
-  + Handle 20 note win condition TODO
+  + Handle 20 note win condition (in `handlers/endPlayingNote`)
 
 * Wrong note
 
-  + Mouse down triggers raspberry  and flashing !! in score with note pressed being lit until raspberry ends
-  + If non-strict mode: Then pause, play current tune again and continue
-  + If strict mode: pause and start a new length-1 tune and continue
+  + Mouse down triggers raspberry  and flashing !! in score with note pressed being lit until raspberry ends (in `handlers/handleNoteDown`)
+  + If non-strict mode: Then pause, play current tune again and continue (in `handlers/handleNoteDown`)
+  + If strict mode: pause and start a new length-1 tune and continue (in `handlers/handleNoteDown`)
 
 * Timeout
 

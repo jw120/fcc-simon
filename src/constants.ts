@@ -156,8 +156,8 @@ const constants: Constants = {
   durations: {
     flash: ms(300),
     finalFlash: ms(800),
-    tuneNote: ms(2000),
-    tuneGap: ms(1000),
+    tuneNote: ms(800),
+    tuneGap: ms(400),
     replayNoteTimeout: ms(5000),
     afterReplay: ms(1000),
     afterFailure: ms(1000),

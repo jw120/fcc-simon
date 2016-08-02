@@ -140,6 +140,9 @@ export function redrawScore(state: State): void {
     case "Plings":
       show = "!!";
       break;
+    case "Win":
+      show = "WIN";
+      break;
     default:
       show = (state.score >= 0 && state.score <= 9) ? "0" + state.score : state.score.toString();
   }

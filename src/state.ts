@@ -14,7 +14,7 @@ export type Note =
   "BlueNote" | "GreenNote" | "YellowNote" | "RedNote";
 
 export type Score =
-  number | "Blank" | "Dashes" | "Plings";
+  number | "Blank" | "Dashes" | "Plings" | "Win";
 
 /** Define the global state that will be shared between modules */
 export interface State {

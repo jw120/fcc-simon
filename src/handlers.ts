@@ -145,12 +145,27 @@ function endPlayingNote(state: State): void {
       redrawButton(state, oldPlaying);
 
       state.notesMatched = state.notesMatched + 1;
+
       if (state.notesMatched >= state.tune.length) {
-        timeout(constants.durations.afterReplay, () => {
-          extendTune(state);
-          redrawScore(state);
-          playTune(state, 0);
-        });
+
+        if (state.notesMatched >= constants.game.winCondition) {
+
+          flashScore(state, "Win", 3, () => { // Flash success
+
+            timeout(constants.durations.afterFailure,   () => newRound(state));
+
+
+          });
+
+        } else {
+
+          timeout(constants.durations.afterReplay, () => {
+            extendTune(state);
+            redrawScore(state);
+            playTune(state, 0);
+
+          });
+        }
       }
 
     }
