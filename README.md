@@ -1,50 +1,18 @@
-
+# FreeCodeCamp Simon Game
 
 
 Callback madness
 
 ## TODO
 
-* Canvas
-
-  + DONE Can we shift the origin?
-  + DONE Use light/dark versions
-  + DONE Pixel decode
-  + DONE Callbacks
-  + DONE Match to window size
-  + DONE Re-draw on window resize
-  + DONE Add central buttons
-  + DONE Rename drawNoteButton, and DRY
-
   + TODO De-pixelate switch label text?
-  + TODO Use brighter green? (Put boardColors into separate file)
-
-* Sound
-
-  + DONE Test whether Start -> 3 random notes works
-
+  + TODO Use brighter green?
   + TODO Does gain work?
   + TODO Check correct notes
   + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?) Use mouseout?
-
-* Logic
-
-  + DONE Extent click decoder to cope with all buttons
-  + DONE Handlers to make all buttons light up
-    - DONE Notes on mouse down/up (put a "depressed" field into State)
-    - DONE Swithches toggle on click
-    - DONE Tidy switch re-rendering - border and text (make separate function to draw Button trim which does black ring and text)
-  + DONE Add sounds
-
   + TODO Work through behaviour list below
-
-* Code
-
- + DONE Document all modules - how to make module documentation not merge with first function?
- + DONE Sort out packaging/webpack etc
- * DONE Use nicer import format namespace and default?
- * DONE Everything in milliseconds (and document that for all functions that take sounds)
- * DONE Frequencies (notes and failure) in constants module
+  + TODO Comment (refactor?) handlers.ts, especially timeouts
+  + TODO Fix README
 
 ## Note notes
 
@@ -107,6 +75,6 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 
 * Timeout
 
-  + TODO
+  + Failure triggered if replay takes too long
 
 

@@ -68,31 +68,7 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 
     } else { // Wrong note
 
-      playFailureSound(state.audio, () => { // Play failure then clear the note button
-        state.depressed = null;
-        redrawButton(state, b);
-      });
-
-      state.notesMatched = null;
-      flashScore(state, "Plings", 3, () => { // Flash failure
-
-        timeout(constants.durations.afterFailure,   () => { // Pause and then...
-
-          if (state.strict) { // Go back to beginning of the round if we are in strict mode
-
-            newRound(state);
-
-          } else { // Start replay again if non-strict
-
-            state.score = state.tune.length;
-            redrawScore(state);
-            playTune(state, 0);
-            state.notesMatched = 0;
-
-          }
-        });
-
-      });
+      replayFailure(state, b);
 
     }
 
@@ -163,9 +139,13 @@ function endPlayingNote(state: State): void {
             extendTune(state);
             redrawScore(state);
             playTune(state, 0);
-
           });
+
         }
+      } else {
+
+        setReplayTimeout(state);
+
       }
 
     }
@@ -187,4 +167,62 @@ function newRound(state: State): void {
 
     });
 
+}
+
+/** Establish a timeout for replays */
+export function setReplayTimeout(state: State): void {
+
+  eventLog("TOSET", null, `Set at (${state.tune.length}, ${state.notesMatched})`);
+
+  timeout(constants.durations.replayWait, makeReplayTimeoutCallback(state, state.tune.length, state.notesMatched));
+
+}
+
+
+
+/** Check for a possible timeout during replay (user too slow to enter a note) */
+export function makeReplayTimeoutCallback(state: State, oldLength: number, oldNotesMatched: number | null): () => void {
+
+  return () => {
+
+    eventLog("TOCHK", null, `Was (${oldLength}, ${oldNotesMatched}), now (${state.tune.length}, ${state.notesMatched})`);
+
+    // If no progress has been made
+    if (state.power && state.tune.length === oldLength && state.notesMatched === oldNotesMatched) {
+      eventLog("TOFAIL", null, "Failure triggered");
+      replayFailure(state, null);
+    }
+  };
+}
+
+/** Replay has failed - play failure sound and restart */
+export function replayFailure(state: State, b: CanvasButton | null): void {
+
+  playFailureSound(state.audio, () => { // Play failure then clear the note button
+    state.depressed = null;
+    if (b) {
+      redrawButton(state, b);
+    }
+  });
+
+  state.notesMatched = null;
+  flashScore(state, "Plings", 3, () => { // Flash failure
+
+    timeout(constants.durations.afterFailure,   () => { // Pause and then...
+
+      if (state.strict) { // Go back to beginning of the round if we are in strict mode
+
+        newRound(state);
+
+      } else { // Start replay again if non-strict
+
+        state.score = state.tune.length;
+        redrawScore(state);
+        playTune(state, 0);
+        state.notesMatched = 0;
+
+      }
+    });
+
+  });
 }

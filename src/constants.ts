@@ -80,6 +80,9 @@ export interface Durations {
   /** Maxium duration of a note during replay phase */
   replayNoteTimeout: Duration;
 
+  /** Maximum time to wait for a note during replay phase before triggering failure */
+  replayWait: Duration;
+
   /** Time to wait after completing a replay phase before extending */
   afterReplay: Duration;
 
@@ -159,6 +162,7 @@ const constants: Constants = {
     tuneNote: ms(800),
     tuneGap: ms(400),
     replayNoteTimeout: ms(5000),
+    replayWait: ms(5000),
     afterReplay: ms(1000),
     afterFailure: ms(1000),
     failureSound: ms(1500)
@@ -173,7 +177,7 @@ const constants: Constants = {
     blue: 329.628,
     yellow: 277.183,
     red: 440,
-    green: 64.814,
+    green: 164.814,
     failure: 66
   },
   colours: {

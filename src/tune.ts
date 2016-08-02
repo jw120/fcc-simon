@@ -4,6 +4,7 @@
  */
 
 import { Note, State, noteToButton } from "./state";
+import { setReplayTimeout } from "./handlers";
 import { startPlayingSound } from "./sound";
 import { redrawButton } from "./board";
 import constants from "./constants";
@@ -49,12 +50,12 @@ export function playTune(state: State, i: number): void {
 
     stepLog("Play", "finished, notesMatched to zero");
     state.notesMatched = 0;
+    setReplayTimeout(state);
 
   }
 
 
 }
-
 
 /** Helper function to return a random note */
 function randomNote(): Note {
