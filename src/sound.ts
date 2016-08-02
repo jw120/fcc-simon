@@ -3,8 +3,9 @@
  *
  */
 
+import { Duration } from "./duration";
 import { Note } from "./state";
-import { failureSoundDuration } from "./boardDimensions";
+import constants from "./constants";
 
 export interface AudioState {
   context: AudioContext;
@@ -29,7 +30,7 @@ export function newAudioState(): AudioState {
 }
 
 /** Start playing the given note, stopping after the optional duration and applying the optional callback */
-export function startPlayingSound(audio: AudioState, n: Note, dur?: number, cb?: (() => void)): void {
+export function startPlayingSound(audio: AudioState, n: Note, dur?: Duration, cb?: (() => void)): void {
 
   let osc: OscillatorNode | undefined = audio.context.createOscillator();
   if (!osc) {
@@ -40,16 +41,16 @@ export function startPlayingSound(audio: AudioState, n: Note, dur?: number, cb?:
 
   switch (n) {
     case "BlueNote":
-      osc.frequency.value = 329.628;
+      osc.frequency.value = constants.frequencies.blue;
       break;
     case "YellowNote":
-      osc.frequency.value = 277.183;
+      osc.frequency.value = constants.frequencies.yellow;
       break;
     case "RedNote":
-      osc.frequency.value = 440;
+      osc.frequency.value = constants.frequencies.red;
       break;
     case "GreenNote":
-      osc.frequency.value = 164.814;
+      osc.frequency.value = constants.frequencies.green;
       break;
     default:
       return;
@@ -58,7 +59,7 @@ export function startPlayingSound(audio: AudioState, n: Note, dur?: number, cb?:
   osc.start();
   audio.playingSound = osc;
   if (dur !== undefined) {
-    osc.stop(audio.context.currentTime + dur);
+    osc.stop(audio.context.currentTime + dur.seconds());
   }
 
   if (cb !== undefined) {
@@ -97,10 +98,10 @@ export function playFailureSound(audio: AudioState, cb: (() => void)): void {
   }
   osc.type = "square";
   osc.connect(audio.gainNode);
-  osc.frequency.value = 66;
+  osc.frequency.value = constants.frequencies.failure;
 
   osc.start();
-  osc.stop(audio.context.currentTime + failureSoundDuration);
+  osc.stop(audio.context.currentTime + constants.durations.failureSound.seconds());
   osc.onended = cb;
 
 }

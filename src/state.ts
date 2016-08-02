@@ -3,6 +3,7 @@
  *
  */
 
+import constants from "./constants";
 import { AudioState, newAudioState } from "./sound";
 import { getContext2D } from "./utils";
 
@@ -40,28 +41,28 @@ export interface State {
 }
 
 /** Create a new initial state or reset the given state (e.g. at start or power off )*/
-export function resetState(state?: State): State {
+export function resetState(oldState?: State): State {
 
-  state = state || {} as State;
+  const newState: State = oldState || {} as State;
 
-  state.canvas = state.canvas || document.getElementById("board") as HTMLCanvasElement;
-  state.context = state.context || getContext2D(state.canvas);
-  state.scale = undefined;
-  state.depressed = null;
-  state.playing = null;
-  state.score = "Blank";
+  newState.canvas = (oldState && oldState.canvas) || document.getElementById("board") as HTMLCanvasElement;
+  newState.context = (oldState && oldState.context) || getContext2D(newState.canvas);
+  newState.scale = undefined;
+  newState.depressed = null;
+  newState.playing = null;
+  newState.score = "Blank";
 
-  state.audio = state.audio || newAudioState();
+  newState.audio = (oldState && oldState.audio) || newAudioState()
 
-  state.tune = [];
-  state.notesMatched = null;
+  newState.tune = [];
+  newState.notesMatched = null;
 
-  state.power = false;
-  state.strict = false;
+  newState.power = false;
+  newState.strict = false;
 
-  updateScale(state);
+  updateScale(newState);
 
-  return state;
+  return newState;
 
 }
 
@@ -69,13 +70,12 @@ export function resetState(state?: State): State {
 export function updateScale(state: State): void {
 
   // We set the canvas to fill most of the available window
-  state.canvas.width = window.innerWidth - 20;
-  state.canvas.height = window.innerHeight - 100; // Allow space for footer
+  state.canvas.width = window.innerWidth - constants.window.widthReserved;
+  state.canvas.height = window.innerHeight - constants.window.heightReserved;
 
   // We transform the canvas so a square with coordinates (-100, -100) to (100, 100)
   // appears as the largest centred squate that will fit on the canvas
-  const canvasMax: number = 100;
-  state.scale = Math.min(state.canvas.width, state.canvas.height) / (2 * canvasMax);
+  state.scale = Math.min(state.canvas.width, state.canvas.height) / (2 * constants.boardDimensions.canvasSize);
   state.context.transform(state.scale, 0, 0, state.scale, state.canvas.width / 2, state.canvas.height / 2);
 
 }

@@ -3,6 +3,8 @@
  *
  */
 
+import { Duration } from "./duration";
+
 /** Should we log events to console.log */
 const logging: boolean = true;
 
@@ -69,8 +71,6 @@ export function log(...args: any[]): void {
 
 }
 
-
-
 /** Right-pad the string with spaces to reach the given length */
 function padTo(s: string | undefined | null, n: number): string {
 
@@ -83,4 +83,9 @@ function padTo(s: string | undefined | null, n: number): string {
   let pad: number = n - s.length;
   return pad > 0 ? s + "                ".substr(0, pad) : s;
 
+}
+
+/** Wrapped version of setTimeout which takes a Duration (or null for zero) and reverses argument order */
+export function timeout(dur: Duration | null, cb: () => void): void {
+  setTimeout(cb, dur === null ? 0 : dur.millseconds(), cb);
 }

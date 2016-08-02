@@ -42,9 +42,9 @@ Callback madness
 
  + DONE Document all modules - how to make module documentation not merge with first function?
  + DONE Sort out packaging/webpack etc
- * TODO Use nicer import format namespace and default?
- * TODO Everything in milliseconds (and document that for all functions that take sounds)
- * TODO Frequencies (notes and failure) in constants module
+ * DONE Use nicer import format namespace and default?
+ * DONE Everything in milliseconds (and document that for all functions that take sounds)
+ * DONE Frequencies (notes and failure) in constants module
 
 ## Note notes
 

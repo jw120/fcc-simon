@@ -4,11 +4,11 @@
  */
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
-import { flashDelay, finalFlashDelay, maxReplayNoteDuration, afterFailureDuration, afterReplayDuration } from "./boardDimensions";
+import constants from "./constants";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
 import { State, Score, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
-import { eventLog } from "./utils";
+import { eventLog, timeout } from "./utils";
 
 /** Handle a click on the power button */
 export function handlePowerClick(state: State): void {
@@ -64,7 +64,7 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 
     if (buttonToNote(b) === state.tune[state.notesMatched]) { // Correct note
 
-      startPlayingSound(state.audio, buttonToNote(b), maxReplayNoteDuration, () => endPlayingNote(state));
+      startPlayingSound(state.audio, buttonToNote(b), constants.durations.replayNoteTimeout, () => endPlayingNote(state));
 
     } else { // Wrong note
 
@@ -74,27 +74,25 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
       });
 
       state.notesMatched = null;
-      flashScore(state, "Plings", 3, () => { // Flash failure method
+      flashScore(state, "Plings", 3, () => { // Flash failure
 
-        setTimeout( // Pause and then...
-          () => {
-            if (state.strict) { // Go back to beginning of the round if we are in strict mode
+        timeout(constants.durations.afterFailure,   () => { // Pause and then...
 
-              newRound(state);
+          if (state.strict) { // Go back to beginning of the round if we are in strict mode
 
-            } else { // Start replay again if non-strict
+            newRound(state);
 
-              state.score = state.tune.length;
-              redrawScore(state);
-              playTune(state, 0);
-              state.notesMatched = 0;
+          } else { // Start replay again if non-strict
 
-            }
-          },
-          afterFailureDuration
-        );
+            state.score = state.tune.length;
+            redrawScore(state);
+            playTune(state, 0);
+            state.notesMatched = 0;
 
-      } );
+          }
+        });
+
+      });
 
     }
 
@@ -125,11 +123,11 @@ function flashScore(state: State, x: Score, n: number, finalCb: ((s: State) => v
 
   if (n > 0) {
 
-    setTimeout(() => flashScore(state, x, n - 1, finalCb), flashDelay);
+    timeout(constants.durations.flash, () => flashScore(state, x, n - 1, finalCb));
 
   } else {
 
-    setTimeout(() => finalCb(state), finalFlashDelay);
+    timeout(constants.durations.finalFlash, () => finalCb(state));
 
   }
 
@@ -139,24 +137,23 @@ function flashScore(state: State, x: Score, n: number, finalCb: ((s: State) => v
 /** Helper function to unlight playing note and */
 function endPlayingNote(state: State): void {
 
-  if (state.depressed !== null && state.notesMatched !== null) {
+  if (state.notesMatched !== null) {
+    if (state.depressed !== null) { // combining these two conditions confuses the Typescript null checker
 
-    const oldPlaying: CanvasButton = state.depressed;
-    state.depressed = null;
-    redrawButton(state, oldPlaying);
+      const oldPlaying: CanvasButton = state.depressed;
+      state.depressed = null;
+      redrawButton(state, oldPlaying);
 
-    state.notesMatched = state.notesMatched + 1;
-    if (state.notesMatched >= state.tune.length) {
-      setTimeout(
-        () => {
+      state.notesMatched = state.notesMatched + 1;
+      if (state.notesMatched >= state.tune.length) {
+        timeout(constants.durations.afterReplay, () => {
           extendTune(state);
           redrawScore(state);
           playTune(state, 0);
-        },
-        afterReplayDuration
-      );
-    }
+        });
+      }
 
+    }
   }
 
 }

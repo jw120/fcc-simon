@@ -11,10 +11,8 @@ import {
   handlePowerClick, handleStrictClick, handleStartClick, handleNoteDown, handleUpFromNote
 } from "./handlers";
 
-import {
-  blackStripeWidth, centralButtonRadius,
-  outerBorderInsideRadius, innerBorderOutsideRadius, innerBorderInsideRadius
-} from "./boardDimensions";
+import constants, { BoardDimensions } from "./constants";
+const dim: BoardDimensions = constants.boardDimensions;
 
 /** Return a callback function to handle clicks on our canvas */
 export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) {
@@ -122,18 +120,13 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 /** Helper function to turn cliks in our normalized coordinates to buttons  */
 function findCanvasButton(coords: [number, number]): CanvasButton | null {
 
-  // log("Find called with", coords);
-
   let x: number = coords[0];
   let y: number = coords[1];
-
   let r: number = Math.sqrt(x * x + y * y);
 
-  // // log("finding", x.toFixed(2), ",", y.toFixed(2), ", r=", r.toFixed(2));
+  if (r > dim.innerBorderOutsideRadius && r < dim.outerBorderInsideRadius) {
 
-  if (r > innerBorderOutsideRadius && r < outerBorderInsideRadius) {
-
-    if (Math.abs(x) > blackStripeWidth / 2 && Math.abs(y) > blackStripeWidth / 2) {
+    if (Math.abs(x) > dim.stripeWidth / 2 && Math.abs(y) > dim.stripeWidth / 2) {
 
       let theta: number = Math.atan2(y, x);
       if (theta > Math.PI / 2 ) {
@@ -148,15 +141,15 @@ function findCanvasButton(coords: [number, number]): CanvasButton | null {
     }
   }
 
-  if (r < innerBorderInsideRadius) {
+  if (r < dim.innerBorderInsideRadius) {
 
-    if (dist(x, y, - 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3) < centralButtonRadius) {
+    if (dist(x, y, - 0.5 * dim.innerBorderInsideRadius, dim.innerBorderInsideRadius * 0.3) < dim.centralButtonRadius) {
       return "PowerButton";
     }
-    if (dist(x, y, 0 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3) < centralButtonRadius) {
+    if (dist(x, y, 0 * dim.innerBorderInsideRadius, dim.innerBorderInsideRadius * 0.3) < dim.centralButtonRadius) {
       return "StartButton";
     }
-    if (dist(x, y, + 0.5 * innerBorderInsideRadius, innerBorderInsideRadius * 0.3) < centralButtonRadius) {
+    if (dist(x, y, + 0.5 * dim.innerBorderInsideRadius, dim.innerBorderInsideRadius * 0.3) < dim.centralButtonRadius) {
       return "StrictButton";
     }
 
@@ -169,8 +162,6 @@ function findCanvasButton(coords: [number, number]): CanvasButton | null {
 
 /** Helper function to return scaled coordinates */
 function scaledCoords(state: State, pageX: number, pageY: number): [number, number] {
-
-  // log("Scaling with", state.canvas.offsetLeft, state.canvas.height, state.scale);
 
   // Pixel coordinates of click relative to canvas
   let pixelX: number = pageX - state.canvas.offsetLeft;
@@ -190,7 +181,6 @@ function clearDepressed(state: State, newButton: CanvasButton | null): void {
 
     let oldDepressed: CanvasButton | null = state.depressed;
     if (oldDepressed && oldDepressed !== newButton) {
-      // log("redrew old depressed", oldDepressed);
       redrawButton(state, oldDepressed);
     }
 
