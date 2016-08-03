@@ -1,5 +1,6 @@
 /**
- * Module holding our Duration interface, used to avoid seconds vs milliseconds confusions
+ * Duration type used for time intervals. Used to reduce mistakes as setTimeout use milliseconds but
+ * the audio interface uses seconds
  *
  */
 

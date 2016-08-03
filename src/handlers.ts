@@ -5,8 +5,8 @@
 
 import { redrawBoard, redrawButton, redrawScore } from "./board";
 import constants from "./constants";
-import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
 import { setReplayTimeout } from "./replay-timeout";
+import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
 import { State, Score, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog, timeout } from "./utils";

@@ -1,6 +1,6 @@
 /**
- * Support setting timeouts during replay phase, and then when they are called checking that then
- * game state has not advanced
+ * Support setting timeouts during replay phase, and then when they are called checking the relevant
+ * portion of the game state and, if it has not advanced, trigger replayFailure
  *
  */
 
@@ -14,7 +14,6 @@ interface ReplayState {
   id: number;
   match: number | null;
 }
-
 
 /** Establish timeout for replays */
 export function setReplayTimeout(state: State): void {

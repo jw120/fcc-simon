@@ -5,13 +5,12 @@
  */
 
 import { redrawButton } from "./board";
-import { State, CanvasButton } from "./state";
-import { dist, eventLog } from "./utils";
-import {
-  handlePowerClick, handleStrictClick, handleStartClick, handleNoteDown, handleUpFromNote
-} from "./handlers";
-
 import constants, { BoardDimensions } from "./constants";
+import { handlePowerClick, handleStrictClick, handleStartClick, handleNoteDown, handleUpFromNote } from "./handlers";
+import { State, CanvasButton } from "./state";
+import { assertNever, dist, eventLog } from "./utils";
+
+/** Shortcut to constants.boardDimensions to reduce verbosity */
 const dim: BoardDimensions = constants.boardDimensions;
 
 /** Return a callback function to handle clicks on our canvas */
@@ -20,8 +19,6 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
   return (event: MouseEvent) => {
 
     let clicked: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
-
-    // log("Click at", event.pageX, event.pageY, ":", clicked);
 
     if (state.power) {
 
@@ -76,9 +73,15 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
           case "GreenButton":
             handleNoteDown(state, down);
             break;
-          default:
+          case "StartButton":
+          case "StrictButton":
+          case "PowerButton":
+          case null:
             eventLog("Down", down, "ignored");
-            // do nothing
+            break;
+          default:
+            assertNever(down); // Compiler will throw a type error if cases are not exhaustive
+            throw Error("Bad down in mouse down handler:" + down);
         }
       }
 
@@ -104,9 +107,15 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
         case "GreenButton":
           handleUpFromNote(state);
           break;
+        case "StartButton":
+        case "StrictButton":
+        case "PowerButton":
+        case null:
+          eventLog("Up", "", "ignored from " + state.depressed);
+          break;
         default:
-          eventLog("Up", "", "ignored");
-            // do nothing
+          assertNever(state.depressed); // Compiler will throw a type error if cases are not exhaustive
+          throw Error("Bad depressed in mouse up handler:" + state.depressed);
       }
 
       clearDepressed(state, null);

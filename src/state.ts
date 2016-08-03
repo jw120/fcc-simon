@@ -5,18 +5,21 @@
 
 import constants from "./constants";
 import { AudioState, newAudioState } from "./sound";
-import { getContext2D } from "./utils";
+import { assertNever, getContext2D } from "./utils";
 
+/** Buttons on the Simon board */
 export type CanvasButton =
   "BlueButton" | "YellowButton" | "GreenButton" | "RedButton" | "StartButton" | "StrictButton" | "PowerButton";
 
+/** Notes that can be played and be part of tunes */
 export type Note =
   "BlueNote" | "GreenNote" | "YellowNote" | "RedNote";
 
+/** Values that can be sent for display on the scoreboard */
 export type Score =
   number | "Blank" | "Dashes" | "Plings" | "Win";
 
-/** Define the global state that will be shared between modules */
+/** Global state that will be shared between modules */
 export interface State {
 
   // Graphics
@@ -44,23 +47,25 @@ export interface State {
 /** Create a new initial state or reset the given state (e.g. at start or power off )*/
 export function resetState(oldState?: State): State {
 
-  const newState: State = oldState || {} as State;
+  let newCanvas: HTMLCanvasElement = (oldState && oldState.canvas) || document.getElementById("board") as HTMLCanvasElement;
 
-  newState.canvas = (oldState && oldState.canvas) || document.getElementById("board") as HTMLCanvasElement;
-  newState.context = (oldState && oldState.context) || getContext2D(newState.canvas);
-  newState.scale = undefined;
-  newState.depressed = null;
-  newState.playing = null;
-  newState.score = "Blank";
+  let newState: State = {
+    canvas: newCanvas,
+    context: (oldState && oldState.context) || getContext2D(newCanvas),
+    scale: undefined,
+    depressed: null,
+    playing: null,
+    score: "Blank",
 
-  newState.audio = (oldState && oldState.audio) || newAudioState();
+    audio: (oldState && oldState.audio) || newAudioState(),
 
-  newState.tune = [];
-  newState.notesMatched = null;
-  newState.id = (oldState && oldState.id) ? oldState.id++ : 0;
+    tune: [],
+    notesMatched: null,
+    id: (oldState && oldState.id) ? oldState.id++ : 0,
 
-  newState.power = false;
-  newState.strict = false;
+    power: false,
+    strict: false
+  };
 
   updateScale(newState);
 
@@ -95,8 +100,13 @@ export function buttonToNote(b: CanvasButton): Note {
       return "GreenNote";
     case "RedButton":
       return "RedNote";
+    case "StartButton":
+    case "PowerButton":
+    case "StrictButton":
+      throw Error("Bad button type in buttonToNote:" + b);
     default:
-      throw Error("Bad button in buttonToNote:" + b);
+      assertNever(b); // TS Compiler will throw an error if above cases are not exhaustive
+      throw Error("Unknown button in buttonToNote:" + b);
   }
 
 }
@@ -114,6 +124,7 @@ export function noteToButton(n: Note): CanvasButton {
     case "RedNote":
       return "RedButton";
     default:
+      assertNever(n); // TS Compiler will throw an error if above cases are not exhaustive
       throw Error("Bad note in noteToButton:" + n);
   }
 

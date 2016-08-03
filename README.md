@@ -5,15 +5,17 @@ Callback madness
 
 ## TODO
 
+  + TOOD
+      - Tidy event
+      - Tidy handlers
+
   + TODO De-pixelate switch label text?
   + TODO Use brighter green?
   + TODO Does gain work?
   + TODO Check correct notes
   + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?) Use mouseout?
   + TODO Work through behaviour list below
-  + TODO Comment (refactor?) handlers.ts etc
   + TODO Fix README
-  + TODO Can replay-timout not use a closure?
 
 ## Note notes
 

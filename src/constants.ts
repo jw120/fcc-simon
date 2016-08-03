@@ -17,12 +17,11 @@ interface Constants {
   boardDimensions: BoardDimensions;
   durations: Durations;
   alphas: Alphas;
-  frequencies: Frequencies;
+  audio: AudioConstants;
   colours: Colours;
   fonts: Fonts;
   game: Game;
 }
-
 
 /** Type for the window-related parameters */
 export interface WindowParams {
@@ -102,12 +101,13 @@ export interface Alphas {
 }
 
 /** Type for the frequencies used to play the notes */
-export interface Frequencies {
+export interface AudioConstants {
   blue: number;
   yellow: number;
   red: number;
   green: number;
   failure: number;
+  gain: number; // gain value for the gainNode
 };
 
 export interface Game {
@@ -173,12 +173,13 @@ const constants: Constants = {
     offSwitch: 0.5,
     onSwitch: 1
   },
-  frequencies: {
+  audio: {
     blue: 329.628,
     yellow: 277.183,
     red: 440,
     green: 164.814,
-    failure: 66
+    failure: 66,
+    gain: 0.1
   },
   colours: {
     stripe: "black",

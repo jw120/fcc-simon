@@ -6,9 +6,9 @@
 import { redrawBoard } from "./board";
 import { makeCanvasClickHandler, makeCanvasMouseDownHandler, makeCanvasMouseUpHandler } from "./event";
 import { resetState, State, updateScale } from "./state";
-import { run_when_document_ready } from "./utils";
+import { runWhenDocumentReady } from "./utils";
 
-run_when_document_ready((): void => {
+runWhenDocumentReady((): void => {
 
   let state: State = resetState();
 

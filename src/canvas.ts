@@ -107,12 +107,14 @@ export function fillNoteButtonShapeCleanAlpha(
 
 }
 
+/** Helper function to move to given location in polar coordinated */
 function moveToPolar(ctx: CanvasRenderingContext2D, r: number, theta: number): void {
 
   ctx.moveTo(r * Math.cos(theta), r * Math.sin(theta));
 
 }
 
+/** Helper function to add a line to the given location in polar coordinates */
 function lineToPolar(ctx: CanvasRenderingContext2D, r: number, theta: number): void {
 
   ctx.lineTo(r * Math.cos(theta), r * Math.sin(theta));

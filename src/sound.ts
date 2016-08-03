@@ -3,10 +3,12 @@
  *
  */
 
+import constants from "./constants";
 import { Duration } from "./duration";
 import { Note } from "./state";
-import constants from "./constants";
+import { assertNever } from "./utils";
 
+/** Audio-relevant portion of the overall game State */
 export interface AudioState {
   context: AudioContext;
   gainNode: GainNode;
@@ -22,7 +24,7 @@ export function newAudioState(): AudioState {
   }
 
   let gainNode: GainNode = context.createGain();
-  gainNode.gain.value = 0.1;
+  gainNode.gain.value = constants.audio.gain;
   gainNode.connect(context.destination);
 
   return { context, gainNode, playingSound: null };
@@ -41,19 +43,20 @@ export function startPlayingSound(audio: AudioState, n: Note, dur?: Duration, cb
 
   switch (n) {
     case "BlueNote":
-      osc.frequency.value = constants.frequencies.blue;
+      osc.frequency.value = constants.audio.blue;
       break;
     case "YellowNote":
-      osc.frequency.value = constants.frequencies.yellow;
+      osc.frequency.value = constants.audio.yellow;
       break;
     case "RedNote":
-      osc.frequency.value = constants.frequencies.red;
+      osc.frequency.value = constants.audio.red;
       break;
     case "GreenNote":
-      osc.frequency.value = constants.frequencies.green;
+      osc.frequency.value = constants.audio.green;
       break;
     default:
-      return;
+      assertNever(n); // Compiler will give a type error if the cases above are not exhaustive
+      throw Error("bad note in startPlayingSound: " + n);
   }
 
   osc.start();
@@ -98,7 +101,7 @@ export function playFailureSound(audio: AudioState, cb: (() => void)): void {
   }
   osc.type = "square";
   osc.connect(audio.gainNode);
-  osc.frequency.value = constants.frequencies.failure;
+  osc.frequency.value = constants.audio.failure;
 
   osc.start();
   osc.stop(audio.context.currentTime + constants.durations.failureSound.seconds());

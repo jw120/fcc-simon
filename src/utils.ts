@@ -9,7 +9,7 @@ import { Duration } from "./duration";
 const logging: boolean = true;
 
 /** Run the given function when document load is complete */
-export function run_when_document_ready(fn: () => void): void {
+export function runWhenDocumentReady(fn: () => void): void {
 
   if (document.readyState !== "loading") {
     fn();

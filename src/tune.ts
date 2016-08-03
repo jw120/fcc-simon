@@ -3,11 +3,11 @@
  *
  */
 
-import { Note, State, noteToButton } from "./state";
-import { startPlayingSound } from "./sound";
 import { redrawButton } from "./board";
 import constants from "./constants";
 import { setReplayTimeout } from "./replay-timeout";
+import { startPlayingSound } from "./sound";
+import { Note, State, noteToButton } from "./state";
 import { stepLog, timeout } from "./utils";
 
 /** Reset the current tune (e.g., after pressing Start button) */
@@ -17,6 +17,7 @@ export function resetTune(state: State): void {
 
 }
 
+/** Add a random note to the tune */
 export function extendTune(state: State): void {
 
  state.tune.push(randomNote());
@@ -24,6 +25,7 @@ export function extendTune(state: State): void {
 
 }
 
+/** Play the tunye starting from the given note (calls itself recursively to iterate over the whole tune) */
 export function playTune(state: State, i: number): void {
 
   stepLog("Play" + i, "starting");
@@ -33,7 +35,7 @@ export function playTune(state: State, i: number): void {
     state.id = state.id + 1;
   }
 
-  if (i < state.tune.length) {
+  if (i < state.tune.length) { // if we still have notes to play
 
     let nextNote: Note = state.tune[i];
 
@@ -50,7 +52,7 @@ export function playTune(state: State, i: number): void {
 
     });
 
-  } else {
+  } else { // tune finished
 
     stepLog("Play", "finished, notesMatched to zero");
     state.notesMatched = 0;
