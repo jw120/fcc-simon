@@ -4,10 +4,10 @@
  */
 
 import { Note, State, noteToButton } from "./state";
-import { setReplayTimeout } from "./handlers";
 import { startPlayingSound } from "./sound";
 import { redrawButton } from "./board";
 import constants from "./constants";
+import { setReplayTimeout } from "./replay-timeout";
 import { stepLog, timeout } from "./utils";
 
 /** Reset the current tune (e.g., after pressing Start button) */
@@ -28,6 +28,10 @@ export function playTune(state: State, i: number): void {
 
   stepLog("Play" + i, "starting");
 
+  // Incremenent id whenever we start playing a new tune
+  if (i === 0) {
+    state.id = state.id + 1;
+  }
 
   if (i < state.tune.length) {
 

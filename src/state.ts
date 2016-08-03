@@ -30,9 +30,10 @@ export interface State {
   // Sound
   audio: AudioState;
 
-  // Tune logic
+  // Game logic
   tune: Note[]; //
   notesMatched: number | null; // gives number of next note in tune expected, or null if not expecting notes
+  id: number; // Incremented each time a new tune starts
 
   // Switches
   power: boolean;
@@ -56,6 +57,7 @@ export function resetState(oldState?: State): State {
 
   newState.tune = [];
   newState.notesMatched = null;
+  newState.id = (oldState && oldState.id) ? oldState.id++ : 0;
 
   newState.power = false;
   newState.strict = false;

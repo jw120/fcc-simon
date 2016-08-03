@@ -6,6 +6,7 @@
 import { redrawBoard, redrawButton, redrawScore } from "./board";
 import constants from "./constants";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
+import { setReplayTimeout } from "./replay-timeout";
 import { State, Score, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog, timeout } from "./utils";
@@ -169,31 +170,7 @@ function newRound(state: State): void {
 
 }
 
-/** Establish a timeout for replays */
-export function setReplayTimeout(state: State): void {
 
-  eventLog("TOSET", null, `Set at (${state.tune.length}, ${state.notesMatched})`);
-
-  timeout(constants.durations.replayWait, makeReplayTimeoutCallback(state, state.tune.length, state.notesMatched));
-
-}
-
-
-
-/** Check for a possible timeout during replay (user too slow to enter a note) */
-export function makeReplayTimeoutCallback(state: State, oldLength: number, oldNotesMatched: number | null): () => void {
-
-  return () => {
-
-    eventLog("TOCHK", null, `Was (${oldLength}, ${oldNotesMatched}), now (${state.tune.length}, ${state.notesMatched})`);
-
-    // If no progress has been made
-    if (state.power && state.tune.length === oldLength && state.notesMatched === oldNotesMatched) {
-      eventLog("TOFAIL", null, "Failure triggered");
-      replayFailure(state, null);
-    }
-  };
-}
 
 /** Replay has failed - play failure sound and restart */
 export function replayFailure(state: State, b: CanvasButton | null): void {
