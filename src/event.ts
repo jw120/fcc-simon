@@ -13,7 +13,7 @@ import { assertNever, dist, eventLog } from "./utils";
 /** Shortcut to constants.boardDimensions to reduce verbosity */
 const dim: BoardDimensions = constants.boardDimensions;
 
-/** Return a callback function to handle clicks on our canvas */
+/** Return a callback function that handles clicks on the canvas using the given game state */
 export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) {
 
   return (event: MouseEvent) => {
@@ -23,6 +23,7 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
     if (state.power) {
 
       switch (clicked) {
+
         case "PowerButton":
           handlePowerClick(state);
           break;
@@ -32,11 +33,23 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
         case "StartButton":
           handleStartClick(state);
           break;
+
+        // Clicks on note buttons are ignored (we instead handle mouse up/down)
+        case "BlueButton":
+        case "RedButton":
+        case "YellowButton":
+        case "GreenButton":
+          eventLog("Click", clicked, "ignored click on note button");
+          break;
+
+        case null:
+          eventLog("Click", clicked, "ignored null click");
+          break;
         default:
-          eventLog("Click", clicked, "ignored");
+          assertNever(clicked); // TS Compiler will throw an error if above cases are not exhaustive
       }
 
-    } else {
+    } else { // power is off
 
       if (clicked === "PowerButton") {
 
@@ -50,7 +63,7 @@ export function makeCanvasClickHandler(state: State): ((e: MouseEvent) => void) 
 
     }
 
-    clearDepressed(state, clicked);
+    clearDepressed(state, clicked); // if we have a stray note lit up, unlight it
 
   };
 
@@ -61,31 +74,27 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
 
   return (event: MouseEvent) => {
 
-    if (state.power) {
+    if (state.power) { // ignore all mouse downs if power is off
 
       let down: CanvasButton | null = findCanvasButton(scaledCoords(state, event.pageX, event.pageY));
 
-      if (down) {
-        switch (down) {
-          case "RedButton":
-          case "YellowButton":
-          case "BlueButton":
-          case "GreenButton":
-            handleNoteDown(state, down);
-            break;
-          case "StartButton":
-          case "StrictButton":
-          case "PowerButton":
-          case null:
-            eventLog("Down", down, "ignored");
-            break;
-          default:
-            assertNever(down); // Compiler will throw a type error if cases are not exhaustive
-            throw Error("Bad down in mouse down handler:" + down);
-        }
+      switch (down) {
+        case "RedButton":
+        case "YellowButton":
+        case "BlueButton":
+        case "GreenButton":
+          handleNoteDown(state, down);
+          break;
+        case "StartButton":
+        case "StrictButton":
+        case "PowerButton":
+        case null:
+          eventLog("Down", down, "ignored mouse down on control or null button");
+          clearDepressed(state, down); // if we have a stray note lit up, unlight it
+          break;
+        default:
+          assertNever(down); // Compiler will throw a type error if cases are not exhaustive
       }
-
-      clearDepressed(state, down);
 
     }
 
@@ -93,12 +102,12 @@ export function makeCanvasMouseDownHandler(state: State): ((e: MouseEvent) => vo
 
 }
 
-/** Return a callback function to handle mouse down events on our canvas */
+/** Return a callback function to handle mouse up events on our canvas */
 export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void) {
 
   return (event: MouseEvent) => {
 
-    if (state.power) {
+    if (state.power) {  // ignore all mouse ups if power is off
 
       switch (state.depressed) {
         case "RedButton":
@@ -107,6 +116,7 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
         case "GreenButton":
           handleUpFromNote(state);
           break;
+
         case "StartButton":
         case "StrictButton":
         case "PowerButton":
@@ -115,10 +125,7 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
           break;
         default:
           assertNever(state.depressed); // Compiler will throw a type error if cases are not exhaustive
-          throw Error("Bad depressed in mouse up handler:" + state.depressed);
       }
-
-      clearDepressed(state, null);
 
     }
 
@@ -126,7 +133,7 @@ export function makeCanvasMouseUpHandler(state: State): ((e: MouseEvent) => void
 
 }
 
-/** Helper function to turn cliks in our normalized coordinates to buttons  */
+/** Helper function to turn clicks in our normalized coordinates to buttons  */
 function findCanvasButton(coords: [number, number]): CanvasButton | null {
 
   let x: number = coords[0];
