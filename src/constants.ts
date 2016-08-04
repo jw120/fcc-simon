@@ -183,15 +183,15 @@ const constants: Constants = {
   },
   colours: {
     stripe: "black",
-    powerButton: "green",
+    powerButton: "limegreen",
     startButton: "red",
     strictButton: "yellow",
     buttonRing: "black",
     redNote: "red",
     yellowNote: "yellow",
-    greenNote: "green",
-    blueNote: "blue",
-    centralBackground: "silver"
+    greenNote: "limegreen",
+    blueNote: "dodgerblue",
+    centralBackground: "lightgray"
   },
   fonts: {
     buttonLabels: "3px sans-serif",

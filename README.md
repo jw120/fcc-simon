@@ -5,14 +5,11 @@ Callback madness
 
 ## TODO
 
-  + TODO Can we specifiy a const parameter (state) - what does const mean?
-  + TODO De-pixelate switch label text?
-  + TODO Use brighter green?
   + TODO Does gain work?
   + TODO Check correct notes
   + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?) Use mouseout?
-  + TODO Work through behaviour list below
   + TODO Fix README
+  + TODO Check iOS
 
 ## Note notes
 
