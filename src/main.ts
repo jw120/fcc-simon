@@ -10,7 +10,8 @@ import { runWhenDocumentReady } from "./utils";
 
 runWhenDocumentReady((): void => {
 
-  let state: State = resetState();
+  let state: State = {} as State;
+  resetState(state);
 
   redrawBoard(state);
 

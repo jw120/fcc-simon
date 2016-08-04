@@ -44,32 +44,26 @@ export interface State {
 
 }
 
-/** Create a new initial state or reset the given state (e.g. at start or power off )*/
-export function resetState(oldState?: State): State {
+/** Reset the given state (e.g. at start, power off or after a win), preserve graphics and audio contexts and id */
+export function resetState(state: State): void {
 
-  let newCanvas: HTMLCanvasElement = (oldState && oldState.canvas) || document.getElementById("board") as HTMLCanvasElement;
+  state.canvas = state.canvas || document.getElementById("board") as HTMLCanvasElement;
+  state.context = state.context || getContext2D(state.canvas);
+  state.scale = undefined;
+  state.depressed = null;
+  state.playing = null;
+  state.score = "Blank";
 
-  let newState: State = {
-    canvas: newCanvas,
-    context: (oldState && oldState.context) || getContext2D(newCanvas),
-    scale: undefined,
-    depressed: null,
-    playing: null,
-    score: "Blank",
+  state.audio = state.audio || newAudioState();
 
-    audio: (oldState && oldState.audio) || newAudioState(),
+  state.tune = [];
+  state.notesMatched = null;
+  state.id = state.id ? state.id++ : 0;
 
-    tune: [],
-    notesMatched: null,
-    id: (oldState && oldState.id) ? oldState.id++ : 0,
+  state.power = false;
+  state.strict = false;
 
-    power: false,
-    strict: false
-  };
-
-  updateScale(newState);
-
-  return newState;
+  updateScale(state);
 
 }
 

@@ -42,7 +42,7 @@ function makeReplayState(state: State): ReplayState {
   return {
     id: state.id,
     match: state.notesMatched
-  }
+  };
 }
 
 /** Helper function to produce a string representation of a ReplayState for debugging messages */
@@ -51,6 +51,6 @@ function showReplayState(r: ReplayState): string {
 }
 
 /** Helper function to test two replay states for value equality */
-function equalReplayState(r1: ReplayState, r2: ReplayState) {
+function equalReplayState(r1: ReplayState, r2: ReplayState): boolean {
   return r1.id === r2.id && r1.match === r2.match;
 }
