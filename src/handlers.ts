@@ -133,7 +133,6 @@ function endPlayingNote(state: State): void {
 
 }
 
-
 /** Helper function to start a new round */
 function newRound(state: State): void {
 
@@ -148,8 +147,6 @@ function newRound(state: State): void {
     });
 
 }
-
-
 
 /** Replay has failed - play failure sound and restart; unlights the button provided if any */
 export function replayFailure(state: State, b: CanvasButton | null): void {

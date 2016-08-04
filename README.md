@@ -1,28 +1,28 @@
 # FreeCodeCamp Simon Game
 
+Implementation of the [Simon](https://en.wikipedia.org/wiki/Simon_(game)) electronic game. Implemented in
+TypeScript with lots of callbacks.
 
-Callback madness
+Hosted at [jw120.github.io](https://jw120.github.io)
 
 ## TODO
 
   + TODO Does gain work?
   + TODO Check correct notes
-  + TODO Add timeout? Is there an event for mousing off page? (mouseup onto document?) Use mouseout?
-  + TODO Fix README
   + TODO Check iOS
 
 ## Note notes
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are
 
-E-note (blue, lower right);  329.628  (was 659.255)
-C-sharp-note (yellow, lower left); 277.183 (was 554.365)
-A-note (red, upper right). 440
-E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
+* E-note (blue, lower right);  329.628
+* C-sharp-note (yellow, lower left); 277.183
+* A-note (red, upper right). 440
+* E-note (green, upper left, an octave lower than blue); 164.814
 
 ## Terminology
 
-* Tune the sequence of notes that the player has to match
+* The *tune* is the sequence of notes that the player has to match
 * The tune is *played* by the Simon game and then *replayed* by the player
 
 ## Behaviour (and implementation note)
@@ -31,13 +31,13 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 
 * Power button active (implented in `event/makeClickHandler` and `handlers/handlePowerClick`)
 * All other buttons inactive (ensured in the three top-level handlers in `event`)
-* Score blank (part of `state/resetState`)
+* Score is blank (part of `state/resetState`)
 
 ### Powering off
 
 * Move to inital powered off state (in `handlers/handlePowerClick`)
-* Killing any sound that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
-* Stopping any tune that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
+* Kill any sound that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
+* Stop any tune that is playing (by `sound/resetPlayingSound` called from `event/handlePowerClick`)
 
 ### Powering on
 
@@ -72,6 +72,6 @@ E-note (green, upper left, an octave lower than blue); 164.814 (was 329.628)
 
 * Timeout
 
-  + Failure triggered if replay takes too long
+  + Failure triggered if player waits too long (in `replay-timeout/setReplayTimeout`)
 
 

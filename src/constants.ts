@@ -13,6 +13,7 @@ import { Duration, ms } from "./duration";
 
 /** Type for our constants default export */
 interface Constants {
+  logging: boolean;
   window: WindowParams;
   boardDimensions: BoardDimensions;
   durations: Durations;
@@ -142,6 +143,7 @@ const insideRadius: number = 30;
 
 /** Values for the constants default export */
 const constants: Constants = {
+  logging: true,
   window: {
     widthReserved: 20,
     heightReserved: 100
@@ -198,7 +200,7 @@ const constants: Constants = {
     score: "20px sans-serif"
   },
   game: {
-    winCondition: 5
+    winCondition: 20
   }
 };
 

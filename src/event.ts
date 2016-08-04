@@ -94,8 +94,8 @@ export function canvasMouseDownHandler(state: State, event: MouseEvent): void {
 
 }
 
-/** Return a callback function to handle mouse up events on our canvas */
-export function canvasMouseUpHandler(state: State, event: MouseEvent): void {
+/** Return a callback function to handle mouseup and mouseout events on our canvas */
+export function canvasMouseUpOrOutHandler(state: State, event: MouseEvent): void {
 
     if (state.power) {  // ignore all mouse ups if power is off
 

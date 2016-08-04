@@ -4,7 +4,7 @@
  */
 
 import { redrawBoard } from "./board";
-import { canvasClickHandler, canvasMouseDownHandler, canvasMouseUpHandler } from "./event";
+import { canvasClickHandler, canvasMouseDownHandler, canvasMouseUpOrOutHandler } from "./event";
 import { resetState, State, updateScale } from "./state";
 import { runWhenDocumentReady } from "./utils";
 
@@ -15,11 +15,20 @@ runWhenDocumentReady((): void => {
   const state: State = {} as State;
   resetState(state);
 
+  // Draw the board for the first time
   redrawBoard(state);
 
+  // Handle mouse clicks on the canvas
   state.canvas.addEventListener("click", (e: MouseEvent) => canvasClickHandler(state, e), false);
   state.canvas.addEventListener("mousedown", (e: MouseEvent) => canvasMouseDownHandler(state, e), false);
-  state.canvas.addEventListener("mouseup", (e: MouseEvent) => canvasMouseUpHandler(state, e), false);
+  state.canvas.addEventListener("mouseup", (e: MouseEvent) => canvasMouseUpOrOutHandler(state, e), false);
+
+  // If user drags the mouse off the canvas, treat this as a mouseup
+  state.canvas.addEventListener("mouseout", (e: MouseEvent) => {
+    if (e && e.target && e.target === state.canvas) {
+      canvasMouseUpOrOutHandler(state, e);
+    }
+  }, false);
 
   window.onresize = () => {
     updateScale(state);
