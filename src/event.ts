@@ -1,6 +1,6 @@
 /*
- * Provides event handlers and handle top-level common parts of event logic (filter for power on and do redraws of
- * any previously depressed buttons)
+ * Provides event handlers for top-level event logic (detect which button, filter for power on and do redraws of
+ * any previously depressed buttons etc). Actual handling of valid events passed to functions from handlers.ts
  *
  */
 

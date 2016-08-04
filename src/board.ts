@@ -5,8 +5,8 @@
 
 import { fillCentredRectangle, fillCentredCircle, fillCentredCircleCleanAlpha, fillNoteButtonShapeCleanAlpha, centredText } from "./canvas";
 import constants, { BoardDimensions, Colours } from "./constants";
-import { State, CanvasButton, buttonToNote } from "./state";
-import { assertNever } from "./utils";
+import { Score, State, CanvasButton, buttonToNote } from "./state";
+import { assertNever, timeout } from "./utils";
 
 /** Shortcut to constants.boardDimensions to reduce verbosity */
 const dim: BoardDimensions = constants.boardDimensions;
@@ -137,27 +137,20 @@ export function redrawScore(state: State): void {
 
 }
 
+/* Update score in X/blank/X/blank sequence, calling next step after delay and then final callback*/
+export function flashScore(state: State, x: Score, n: number, finalCb: ((s: State) => void)): void {
 
-// export function redrawScore(state: State): void {
+  state.score = n % 2 ? "Blank" : x;
+  redrawScore(state);
 
-//   let show: string;
-//   switch (state.score) {
-//     case "Blank":
-//       show = "";
-//       break;
-//     case "Dashes":
-//       show = "--";
-//       break;
-//     case "Plings":
-//       show = "!!";
-//       break;
-//     case "Win":
-//       show = "WIN";
-//       break;
-//     default:
-//       if (typeof state.score === "number") {
-//         show = (state.score >= 0 && state.score <= 9) ? "0" + state.score : state.score.toString();
-//       } else {
-//           assertNever(state.score); // TS Compiler will throw an error if above cases are not exhaustive
-//       }
-//   }
+  if (n > 0) {
+
+    timeout(constants.durations.flash, () => flashScore(state, x, n - 1, finalCb));
+
+  } else {
+
+    timeout(constants.durations.finalFlash, () => finalCb(state));
+
+  }
+
+}

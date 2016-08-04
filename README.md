@@ -5,7 +5,6 @@ Callback madness
 
 ## TODO
 
-  + TOOO Tidy handlers.ts
   + TODO Can we specifiy a const parameter (state) - what does const mean?
   + TODO De-pixelate switch label text?
   + TODO Use brighter green?

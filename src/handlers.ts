@@ -1,13 +1,13 @@
 /*
- * Specific event handlers for mouse interactions on our buttons
+ * Event handlers for specific events interactions on our buttons
  *
  */
 
-import { redrawBoard, redrawButton, redrawScore } from "./board";
+import { flashScore, redrawBoard, redrawButton, redrawScore } from "./board";
 import constants from "./constants";
 import { setReplayTimeout } from "./replay-timeout";
 import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
-import { State, Score, CanvasButton, buttonToNote, resetState } from "./state";
+import { State, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog, timeout } from "./utils";
 
@@ -92,49 +92,28 @@ export function handleUpFromNote(state: State): void {
 
 }
 
-/* Update score in X/blank/X/blank sequence, calling next step after delay and then final callback*/
-function flashScore(state: State, x: Score, n: number, finalCb: ((s: State) => void)): void {
-
-  state.score = n % 2 ? "Blank" : x;
-  redrawScore(state);
-
-  if (n > 0) {
-
-    timeout(constants.durations.flash, () => flashScore(state, x, n - 1, finalCb));
-
-  } else {
-
-    timeout(constants.durations.finalFlash, () => finalCb(state));
-
-  }
-
-}
-
-
-/** Helper function to unlight playing note and */
+/** Helper function to handle the ending of the playing of a correct note as part of replay */
 function endPlayingNote(state: State): void {
 
   if (state.notesMatched !== null) {
     if (state.depressed !== null) { // combining these two conditions confuses the Typescript null checker
 
+      // Unlight the button
       const oldPlaying: CanvasButton = state.depressed;
       state.depressed = null;
       redrawButton(state, oldPlaying);
 
       state.notesMatched = state.notesMatched + 1;
 
-      if (state.notesMatched >= state.tune.length) {
+      if (state.notesMatched >= state.tune.length) { // We have finished the replay for this tune
 
-        if (state.notesMatched >= constants.game.winCondition) {
+        if (state.notesMatched >= constants.game.winCondition) { // We have won the game
 
-          flashScore(state, "Win", 3, () => { // Flash success
-
-            timeout(constants.durations.afterFailure,   () => newRound(state));
-
-
+          flashScore(state, "Win", 5, () => { // Flash success and restart
+            timeout(constants.durations.afterFailure, () => newRound(state));
           });
 
-        } else {
+        } else { // Game is not over, pause and start a new extended tune
 
           timeout(constants.durations.afterReplay, () => {
             extendTune(state);
@@ -143,7 +122,7 @@ function endPlayingNote(state: State): void {
           });
 
         }
-      } else {
+      } else { // we have not finished the replay for this tune, so set timeout to wait for the next note
 
         setReplayTimeout(state);
 
@@ -172,10 +151,10 @@ function newRound(state: State): void {
 
 
 
-/** Replay has failed - play failure sound and restart */
+/** Replay has failed - play failure sound and restart; unlights the button provided if any */
 export function replayFailure(state: State, b: CanvasButton | null): void {
 
-  playFailureSound(state.audio, () => { // Play failure then clear the note button
+  playFailureSound(state.audio, () => { // Play failure sound and then clear the note button
     state.depressed = null;
     if (b) {
       redrawButton(state, b);
