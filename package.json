@@ -21,8 +21,9 @@
   "scripts": {
     "compile": "tsc",
     "compile-watch": "tsc --watch",
-    "build": "webpack",
-    "build-watch": "webpack --watch",
+    "build:static": "mkdir -p dist && cp src/index.html src/simon.css dist/",
+    "build": "npm run build:static && webpack",
+    "build-watch": "npm run build:static && webpack --watch",
     "lint": "tslint -c tslint.json src/*.ts"
   },
   "author": "JW",

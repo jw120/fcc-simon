@@ -46,7 +46,7 @@ export function getContext2D(cvs: HTMLCanvasElement): CanvasRenderingContext2D {
 export function eventLog(triggerName: string | undefined | null, target: string | undefined | null, action: string): void {
 
   if (constants.logging) {
-    console.log(padTo(triggerName, 6), padTo(target, 12), ":", action);
+    console.log(padTo(triggerName, 6) + " " + padTo(target, 12) +  " : " + action);
   }
 
 }
@@ -55,7 +55,7 @@ export function eventLog(triggerName: string | undefined | null, target: string 
 export function stepLog(stepName: string | undefined | null, message: string): void {
 
   if (constants.logging) {
-    console.log(padTo(stepName, 6), padTo((Date.now() % 100000).toString(), 12), ":", message);
+    console.log(padTo(stepName, 6) + " " + padTo((Date.now() % 100000).toString(), 12) + " : " + message);
   }
 
 }

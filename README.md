@@ -7,9 +7,11 @@ Hosted at [jw120.github.io](https://jw120.github.io)
 
 ## TODO
 
-  + TODO Does gain work?
-  + TODO Check correct notes
-  + TODO Check iOS
+  + Check still works on Chrome
+  + Convert to using timeouts instead of .stop(time) so works on Mac Safari
+  + Test on iPhone
+  + Does gain work?
+  + Test and correct notes
 
 ## Note notes
 

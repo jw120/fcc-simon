@@ -1,7 +1,7 @@
 module.exports = {
     entry: "./src/main.ts",
     output: {
-        filename: "./src/bundle.js",
+        filename: "./dist/bundle.js",
     },
     devtool: "source-map",
     resolve: {

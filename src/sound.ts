@@ -6,7 +6,7 @@
 import constants from "./constants";
 import { Duration } from "./duration";
 import { Note } from "./state";
-import { assertNever } from "./utils";
+import { assertNever, eventLog } from "./utils";
 
 /** Audio-relevant portion of the overall game State */
 export interface AudioState {
@@ -15,10 +15,23 @@ export interface AudioState {
   playingSound: OscillatorNode | null;
 }
 
+// Safari uses webkitAudioContext instead of the standard AudioContext. TypeScript library headers
+// only provide the latter, so we provide a copy here for webkitAudioContext
+declare var webkitAudioContext: {
+    prototype: AudioContext;
+    new(): AudioContext;
+};
+
 /** Initialize sound system, updating state */
 export function newAudioState(): AudioState {
 
-  let context: AudioContext | undefined = new AudioContext();
+  // Get the AudioContext from either the standard AudioContext or the Safari-esque webkitAudioContext
+  let context: AudioContext | undefined = undefined;
+  if ("AudioContext" in window) {
+    context = new AudioContext();
+  } else if ("webkitAudioContext" in window) {
+    context = new webkitAudioContext();
+  }
   if (!context) {
     throw Error("Failed to create AudioContext");
   }
@@ -33,6 +46,8 @@ export function newAudioState(): AudioState {
 
 /** Start playing the given note, stopping after the optional duration and applying the optional callback */
 export function startPlayingSound(audio: AudioState, n: Note, dur?: Duration, cb?: (() => void)): void {
+
+  eventLog("StrtPl", n, "");
 
   let osc: OscillatorNode | undefined = audio.context.createOscillator();
   if (!osc) {
@@ -72,10 +87,20 @@ export function startPlayingSound(audio: AudioState, n: Note, dur?: Duration, cb
 }
 
 export function stopPlayingSound(audio: AudioState): void {
+  console.log(audio);
+  if (audio.playingSound !== null) {
+    console.log("playingSound is", audio.playingSound, (audio.playingSound as any).playbackState);
+  } else {
+    console.log("playingSound is null");
+  }
 
   if (audio.playingSound) {
+    console.log("Stopping sound next");
     audio.playingSound.stop();
+    console.log("Sound stopped()");
     audio.playingSound = null;
+  } else {
+    console.log("Skipped stop as no playingSound");
   }
 
 }
