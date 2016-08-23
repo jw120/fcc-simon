@@ -7,9 +7,9 @@ Hosted at [jw120.github.io](https://jw120.github.io)
 
 ## TODO
 
-  + Check still works on Chrome
-  + Convert to using timeouts instead of .stop(time) so works on Mac Safari
-  + Test on iPhone
+  + Logs to be able to be turned on from console
+  + Bug - if timeout during replay while holding down note, the note is not unhighlighted
+  + Test on Chrome, Safari, iPhone
   + Does gain work?
   + Test and correct notes
 

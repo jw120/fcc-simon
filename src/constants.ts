@@ -77,9 +77,6 @@ export interface Durations {
   /** Duration of pause between each note when we play the tune */
   tuneGap: Duration;
 
-  /** Maxium duration of a note during replay phase */
-  replayNoteTimeout: Duration;
-
   /** Maximum time to wait for a note during replay phase before triggering failure */
   replayWait: Duration;
 
@@ -163,7 +160,6 @@ const constants: Constants = {
     finalFlash: ms(800),
     tuneNote: ms(800),
     tuneGap: ms(400),
-    replayNoteTimeout: ms(5000),
     replayWait: ms(5000),
     afterReplay: ms(1000),
     afterFailure: ms(1000),

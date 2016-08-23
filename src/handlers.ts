@@ -65,7 +65,7 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 
     if (buttonToNote(b) === state.tune[state.notesMatched]) { // Correct note
 
-      startPlayingSound(state.audio, buttonToNote(b), constants.durations.replayNoteTimeout, () => endPlayingNote(state));
+      startPlayingSound(state.audio, buttonToNote(b), undefined, () => endPlayingNote(state));
 
     } else { // Wrong note
 
