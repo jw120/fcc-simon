@@ -77,41 +77,11 @@ export function startPlayingSound(audio: AudioState, n: Note, dur?: Duration, cb
   osc.start();
   audio.playingSound = osc;
   if (dur !== undefined) {
-
-    // osc.stop() with a duration in Safari gives an error if we try and stop() the note early, so use a timeout instead
     osc.stop(audio.context.currentTime + dur.seconds());
-    // timeout(dur, (): void => {
-    //   if (osc) {
-    //     osc.stop();
-    //   }
-    // });
   }
 
   if (cb !== undefined) {
     osc.onended = cb;
-  }
-
-}
-
-export function stopPlayingSound(audio: AudioState): void {
-  console.log(audio);
-  if (audio.playingSound !== null) {
-    console.log("playingSound is", audio.playingSound, (audio.playingSound as any).playbackState);
-  } else {
-    console.log("playingSound is null");
-  }
-
-  if (audio.playingSound) {
-    console.log("Stopping sound next");
-    try {
-    audio.playingSound.stop();
-    } catch (e) {
-      console.log("Ignoring error in stop()", e);
-    }
-    console.log("Sound stopped()");
-    audio.playingSound = null;
-  } else {
-    console.log("Skipped stop as no playingSound");
   }
 
 }
@@ -125,7 +95,7 @@ export function resetPlayingSound(audio: AudioState): void {
       audio.playingSound.stop();
     } catch (e) {
       if (e.name === "InvalidStateError") {
-        log("Ignored InvalidStateError in stop() during resetPlayingSound - Safari workaround")
+        log("Ignored InvalidStateError in stop() during resetPlayingSound - Safari workaround");
       } else {
         log("Ignored unexpected error in stop", e);
       }

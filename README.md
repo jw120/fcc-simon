@@ -7,9 +7,7 @@ Hosted at [jw120.github.io](https://jw120.github.io)
 
 ## TODO
 
-  + Logs to be able to be turned on from console
-  + Bug - if timeout during replay while holding down note, the note is not unhighlighted
-  + Test on Chrome, Safari, iPhone
+  + Test iPhone
   + Does gain work?
   + Test and correct notes
 

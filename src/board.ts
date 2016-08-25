@@ -40,14 +40,19 @@ export function redrawBoard(state: State): void {
   redrawButton(state, "StrictButton");
 
   // Draw the note buttons
-  redrawButton(state, "BlueButton");
-  redrawButton(state, "YellowButton");
-  redrawButton(state, "GreenButton");
-  redrawButton(state, "RedButton");
+  redrawNotes(state);
 
   // Add the score
   redrawScore(state);
 
+}
+
+/** Redraw all the note buttons */
+export function redrawNotes(state: State): void {
+  redrawButton(state, "BlueButton");
+  redrawButton(state, "YellowButton");
+  redrawButton(state, "GreenButton");
+  redrawButton(state, "RedButton");
 }
 
 /** Redraw a button based on its current state */

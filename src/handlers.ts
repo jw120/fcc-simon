@@ -3,10 +3,10 @@
  *
  */
 
-import { flashScore, redrawBoard, redrawButton, redrawScore } from "./board";
+import { flashScore, redrawBoard, redrawButton, redrawNotes, redrawScore } from "./board";
 import constants from "./constants";
 import { setReplayTimeout } from "./replay-timeout";
-import { startPlayingSound, stopPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
+import { startPlayingSound, resetPlayingSound, playFailureSound } from "./sound";
 import { State, CanvasButton, buttonToNote, resetState } from "./state";
 import { resetTune, extendTune, playTune } from "./tune";
 import { eventLog, timeout } from "./utils";
@@ -85,7 +85,7 @@ export function handleNoteDown(state: State, b: CanvasButton): void {
 export function handleUpFromNote(state: State): void {
 
   eventLog("Up", undefined, "from note, stops sound ");
-  stopPlayingSound(state.audio);
+  resetPlayingSound(state.audio);
   if (state.depressed !== null) {
     endPlayingNote(state);
   }
@@ -151,10 +151,18 @@ function newRound(state: State): void {
 /** Replay has failed - play failure sound and restart; unlights the button provided if any */
 export function replayFailure(state: State, b: CanvasButton | null): void {
 
+  // If note is still playing (as this function was called from a timeout), stop it
+  if (state.audio.playingSound) {
+    state.audio.playingSound.stop();
+    state.audio.playingSound = null;
+  }
+
   playFailureSound(state.audio, () => { // Play failure sound and then clear the note button
     state.depressed = null;
     if (b) {
       redrawButton(state, b);
+    } else {
+      redrawNotes(state); // If failure from a timeout,redraw all the notes
     }
   });
 

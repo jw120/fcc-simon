@@ -83,7 +83,7 @@ export function canvasMouseDownHandler(state: State, event: MouseEvent): void {
       case "StrictButton":
       case "PowerButton":
       case null:
-        eventLog("Down", down, "ignored mouse down on control or null button");
+        eventLog("Down", down, "ignored down on control/null button");
         clearDepressed(state, down); // if we have a stray note lit up, unlight it
         break;
       default:
