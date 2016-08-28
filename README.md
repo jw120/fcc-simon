@@ -1,15 +1,19 @@
 # FreeCodeCamp Simon Game
 
 Implementation of the [Simon](https://en.wikipedia.org/wiki/Simon_(game)) electronic game. Implemented in
-TypeScript with lots of callbacks.
+TypeScript.
+
+Progam badly needs some better abstraction - extremely heavy on callbacks (often via `setTimout`) and passes a monolithic
+mutable state around everywhere.
+
+Tested on macOS Chrome and Safari. Loads on iPhone safari, but interface is not well-suited to mobile so did not iron out
+the problems.
+
+Safari's implementation of audio seems to have problems with calling `stop()` multiple times, we work around with `try` and `catch` (an
+example of the problem is shown in `test_audio.js`)
 
 Hosted at [jw120.github.io](https://jw120.github.io)
 
-## TODO
-
-  + Test iPhone
-  + Does gain work?
-  + Test and correct notes
 
 ## Note notes
 
@@ -60,7 +64,7 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Simon_(game)), Notes are
 
   + Mouse down on correct note starts note playing and lights up note (in `handlers/handleNoteDown`)
   + Mouse up on correct note ends note playing and unlights note (in `handlers/handleNoteUp`)
-  + Timeout while playing note ends note playing and unlights note (in `handlers/handleNoteDown`)
+  + Removed - Timeout while playing note ends note playing and unlights note (in `handlers/handleNoteDown`)
   + On ending final note, pause and extend the tune (in `handlers/endPlayingNote`)
   + Handle 20 note win condition (in `handlers/endPlayingNote`)
 

@@ -48,7 +48,7 @@ declare var process: { env: any };
 function debugging(): boolean {
   if (typeof window !== "undefined" && window.localStorage)  {
     let d: string = window.localStorage.getItem("debug");
-    return d !== "" && d !== "0" && d.toLowerCase() !== "false";
+    return d !== null && d !== "" && d !== "0" && d.toLowerCase() !== "false";
   }
   if (typeof process !== "undefined" && process.env && process.env.DEBUG) {
     return true;
